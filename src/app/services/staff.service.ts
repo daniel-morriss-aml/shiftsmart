@@ -16,7 +16,13 @@ export class StaffService {
     }
 
     addStaff(member: StaffMember): void {
-        this.staffList.update((current) => [...current, member]);
+        this.staffList.update((current) => {
+            if (current.some((s) => s.id === member.id)) {
+                console.warn(`Staff member with id "${member.id}" already exists. Skipping add.`);
+                return current;
+            }
+            return [...current, member];
+        });
         this.saveToStorage();
     }
 
