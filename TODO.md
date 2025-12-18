@@ -19,19 +19,19 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Core Models & Enums
 
--   [ ] Define `Role` enum (Nurse, RA)
--   [ ] Define `Gender` enum (Male, Female, Other)
--   [ ] Define `ShiftType` enum (Day, Night)
--   [ ] Define `StaffAvailability` interface
--   [ ] Define `ShiftSlotId` type
--   [ ] Define `StaffMember` interface
--   [ ] Define `ShiftRequirement` interface
--   [ ] Define `DayShiftRequirements` interface
--   [ ] Define `HospitalConfig` interface
--   [ ] Define `ShiftAssignment` interface
--   [ ] Define `StaffWorkSummary` interface
--   [ ] Define `Rota` interface
--   [ ] Define `RotaRules` interface (optional)
+-   [x] Define `Role` enum (Nurse, RA)
+-   [x] Define `Gender` enum (Male, Female, Other)
+-   [x] Define `ShiftType` enum (Day, Night)
+-   [x] Define `StaffAvailability` interface
+-   [x] Define `ShiftSlotId` type
+-   [x] Define `StaffMember` interface
+-   [x] Define `ShiftRequirement` interface
+-   [x] Define `DayShiftRequirements` interface
+-   [x] Define `HospitalConfig` interface
+-   [x] Define `ShiftAssignment` interface
+-   [x] Define `StaffWorkSummary` interface
+-   [x] Define `Rota` interface
+-   [x] Define `RotaRules` interface (optional)
 
 ### Core Services
 
