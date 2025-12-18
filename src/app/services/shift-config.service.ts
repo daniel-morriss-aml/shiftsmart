@@ -81,6 +81,9 @@ export class ShiftConfigService {
         if (requirement.maxTotalStaff < requirement.minNurses + requirement.minRAs) {
             errors.push('Maximum total staff must be >= minimum nurses + minimum RAs');
         }
+        if (requirement.maxTotalStaff < requirement.maxNurses + requirement.maxRAs) {
+            errors.push('Maximum total staff must be >= maximum nurses + maximum RAs');
+        }
 
         return errors;
     }
