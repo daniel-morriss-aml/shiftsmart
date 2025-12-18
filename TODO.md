@@ -35,10 +35,10 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Core Services
 
--   [ ] Create `StaffService` with in-memory storage
--   [ ] Create `ShiftConfigService` with default requirements
--   [ ] Create skeleton `RotaEngineService` with `generateRota()` stub
--   [ ] Create `RotaStore` (simple RxJS store for current rota state)
+-   [x] Create `StaffService` with in-memory storage (using signals)
+-   [x] Create `ShiftConfigService` with default requirements (using signals)
+-   [x] Create skeleton `RotaEngineService` with `generateRota()` stub
+-   [x] Create `RotaStore` service using Angular signals for current rota state
 
 ### App Shell & Navigation
 
