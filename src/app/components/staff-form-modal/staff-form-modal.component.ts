@@ -24,6 +24,12 @@ export class StaffFormModalComponent implements OnInit {
   save = output<StaffMember>();
   cancel = output<void>();
 
+  // Constants
+  private readonly SATURDAY_INDEX = 5;
+  private readonly SUNDAY_INDEX = 6;
+  private readonly MAX_SHIFTS_PER_FORTNIGHT = 28;
+  readonly days = Array.from({ length: 14 }, (_, i) => i + 1);
+
   // Form fields
   name = '';
   role: Role = Role.Nurse;
@@ -105,6 +111,9 @@ export class StaffFormModalComponent implements OnInit {
     this.initializeShiftSlots();
   }
 
+  /**
+   * Returns a formatted label for a day in the fortnight (e.g., "W1 Mon", "W2 Fri")
+   */
   getDayLabel(day: number): string {
     const weekday = (day - 1) % 7;
     const week = day <= 7 ? 1 : 2;
@@ -112,9 +121,12 @@ export class StaffFormModalComponent implements OnInit {
     return `W${week} ${days[weekday]}`;
   }
 
+  /**
+   * Checks if a given day falls on a weekend (Saturday or Sunday)
+   */
   isWeekend(day: number): boolean {
     const weekday = (day - 1) % 7;
-    return weekday === 5 || weekday === 6; // Saturday or Sunday
+    return weekday === this.SATURDAY_INDEX || weekday === this.SUNDAY_INDEX;
   }
 
   onSave(): void {
@@ -131,6 +143,11 @@ export class StaffFormModalComponent implements OnInit {
       return;
     }
 
+    if (this.shiftsPerFortnight > this.MAX_SHIFTS_PER_FORTNIGHT) {
+      this.errorMessage = `Shifts per fortnight cannot exceed ${this.MAX_SHIFTS_PER_FORTNIGHT}`;
+      return;
+    }
+
     const unavailableSlots = this.shiftSlots
       .filter(slot => !slot.available)
       .map(slot => slot.id);
@@ -142,6 +159,13 @@ export class StaffFormModalComponent implements OnInit {
 
     if (!canWorkDays && !canWorkNights) {
       this.errorMessage = 'Staff member must be available for at least one shift';
+      return;
+    }
+
+    // Validate feasibility of shifts requested vs available slots
+    const maxPossibleShifts = availableSlots.length;
+    if (this.shiftsPerFortnight > maxPossibleShifts) {
+      this.errorMessage = `Cannot request ${this.shiftsPerFortnight} shifts when only ${maxPossibleShifts} slots are available. Please adjust shifts or availability.`;
       return;
     }
 
@@ -170,18 +194,31 @@ export class StaffFormModalComponent implements OnInit {
     return `staff-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
+  /**
+   * Toggles the availability of all shifts of a specific type (Day or Night)
+   * @param shiftType The type of shift to toggle
+   * @param available Whether to mark the shifts as available or unavailable
+   */
   toggleAllShifts(shiftType: 'Day' | 'Night', available: boolean): void {
     this.shiftSlots
       .filter(slot => slot.shift === shiftType)
       .forEach(slot => slot.available = available);
   }
 
+  /**
+   * Toggles the availability of all weekday shifts (Monday-Friday)
+   * @param available Whether to mark the shifts as available or unavailable
+   */
   toggleAllWeekdays(available: boolean): void {
     this.shiftSlots
       .filter(slot => !this.isWeekend(slot.day))
       .forEach(slot => slot.available = available);
   }
 
+  /**
+   * Toggles the availability of all weekend shifts (Saturday-Sunday)
+   * @param available Whether to mark the shifts as available or unavailable
+   */
   toggleAllWeekends(available: boolean): void {
     this.shiftSlots
       .filter(slot => this.isWeekend(slot.day))

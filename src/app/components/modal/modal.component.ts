@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,6 +13,13 @@ export class ModalComponent {
   title = input('');
   maxWidth = input<'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl'>('lg');
   close = output<void>();
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isOpen()) {
+      this.close.emit();
+    }
+  }
 
   onBackdropClick(event: MouseEvent): void {
     if (event.target === event.currentTarget) {
