@@ -45,6 +45,7 @@ export class StaffFormModalComponent implements OnInit {
     // Enums for templates
     Role = Role;
     Gender = Gender;
+    ShiftType = ShiftType;
     roles = Object.values(Role);
     genders = Object.values(Gender);
 
@@ -199,7 +200,7 @@ export class StaffFormModalComponent implements OnInit {
      * @param shiftType The type of shift to toggle
      * @param available Whether to mark the shifts as available or unavailable
      */
-    toggleAllShifts(shiftType: 'Day' | 'Night', available: boolean): void {
+    toggleAllShifts(shiftType: ShiftType, available: boolean): void {
         this.shiftSlots
             .filter((slot) => slot.shift === shiftType)
             .forEach((slot) => (slot.available = available));
@@ -223,5 +224,19 @@ export class StaffFormModalComponent implements OnInit {
         this.shiftSlots
             .filter((slot) => this.isWeekend(slot.day))
             .forEach((slot) => (slot.available = available));
+    }
+
+    /**
+     * Clears all shift selections (marks all shifts as unavailable)
+     */
+    clearAllShifts(): void {
+        this.shiftSlots.forEach((slot) => (slot.available = false));
+    }
+
+    /**
+     * Checks if any shifts are currently selected (available)
+     */
+    hasSelectedShifts(): boolean {
+        return this.shiftSlots.some((slot) => slot.available);
     }
 }
