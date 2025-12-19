@@ -33,6 +33,9 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
   // Availability
   shiftSlots: ShiftSlot[] = [];
 
+  // Validation errors
+  errorMessage = '';
+
   // Enums for templates
   Role = Role;
   Gender = Gender;
@@ -78,13 +81,10 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
     // Initialize all slots as available
     this.initializeShiftSlots();
     
-    // Mark unavailable slots
+    // Mark unavailable slots using direct ID matching
     if (member.availability.unavailableSlots) {
       member.availability.unavailableSlots.forEach(slotId => {
-        const slot = this.shiftSlots.find(s => 
-          slotId.includes(`-${s.shift}`) && slotId.includes(`-${s.day}-`) || 
-          slotId.includes(`day-${s.day}-${s.shift}`)
-        );
+        const slot = this.shiftSlots.find(s => s.id === slotId);
         if (slot) {
           slot.available = false;
         }
@@ -97,6 +97,7 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
     this.role = Role.Nurse;
     this.gender = Gender.Female;
     this.shiftsPerFortnight = 7;
+    this.errorMessage = '';
     this.initializeShiftSlots();
   }
 
@@ -113,13 +114,16 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
   }
 
   onSave(): void {
+    // Clear previous error
+    this.errorMessage = '';
+
     if (!this.name.trim()) {
-      alert('Please enter a name');
+      this.errorMessage = 'Please enter a name';
       return;
     }
 
     if (this.shiftsPerFortnight <= 0) {
-      alert('Shifts per fortnight must be greater than 0');
+      this.errorMessage = 'Shifts per fortnight must be greater than 0';
       return;
     }
 
@@ -133,7 +137,7 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
     const canWorkWeekends = availableSlots.some(s => this.isWeekend(s.day));
 
     if (!canWorkDays && !canWorkNights) {
-      alert('Staff member must be available for at least one shift');
+      this.errorMessage = 'Staff member must be available for at least one shift';
       return;
     }
 
@@ -159,7 +163,7 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
   }
 
   generateId(): string {
-    return `staff-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `staff-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
   toggleAllShifts(shiftType: 'Day' | 'Night', available: boolean): void {
