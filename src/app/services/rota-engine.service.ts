@@ -53,6 +53,6 @@ export class RotaEngineService {
     }
 
     private generateRotaId(): string {
-        return `rota-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        return `rota-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     }
 }
