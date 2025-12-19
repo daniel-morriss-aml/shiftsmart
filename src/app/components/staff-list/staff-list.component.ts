@@ -174,6 +174,16 @@ export class StaffListComponent {
   }
 
   importStaffList(): void {
+    // Warn user if there is existing data
+    if (this.hasStaff()) {
+      const confirmed = confirm(
+        'Warning: Importing a staff list will replace all existing staff data. Do you want to continue?'
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'application/json,.json';
