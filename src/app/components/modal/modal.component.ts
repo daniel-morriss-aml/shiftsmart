@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,10 +9,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './modal.component.scss'
 })
 export class ModalComponent {
-  @Input() isOpen = false;
-  @Input() title = '';
-  @Input() maxWidth: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' = 'lg';
-  @Output() close = new EventEmitter<void>();
+  isOpen = input(false);
+  title = input('');
+  maxWidth = input<'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl'>('lg');
+  close = output<void>();
 
   onBackdropClick(event: MouseEvent): void {
     if (event.target === event.currentTarget) {

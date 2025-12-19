@@ -1,11 +1,11 @@
 <app-modal 
-  [isOpen]="isOpen" 
-  [title]="title" 
+  [isOpen]="isOpen()" 
+  [title]="title()" 
   [maxWidth]="'md'"
   (close)="onCancel()"
 >
   <div class="space-y-4">
-    <p class="text-gray-700">{{ message }}</p>
+    <p class="text-gray-700">{{ message() }}</p>
     
     <div class="flex justify-end gap-3 pt-4">
       <button
@@ -13,15 +13,15 @@
         (click)="onCancel()"
         class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-medium"
       >
-        {{ cancelText }}
+        {{ cancelText() }}
       </button>
       <button
         type="button"
         (click)="onConfirm()"
         class="px-4 py-2 text-white rounded-md transition-colors font-medium"
-        [ngClass]="confirmButtonClass"
+        [ngClass]="confirmButtonClass()"
       >
-        {{ confirmText }}
+        {{ confirmText() }}
       </button>
     </div>
   </div>

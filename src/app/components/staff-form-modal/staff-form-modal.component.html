@@ -1,6 +1,6 @@
 <app-modal 
-  [isOpen]="isOpen" 
-  [title]="staffMember ? 'Edit Staff Member' : 'Add Staff Member'" 
+  [isOpen]="isOpen()" 
+  [title]="staffMember() ? 'Edit Staff Member' : 'Add Staff Member'" 
   [maxWidth]="'4xl'"
   (close)="onCancel()"
 >
@@ -192,7 +192,7 @@
         type="submit"
         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
       >
-        {{ staffMember ? 'Update' : 'Add' }} Staff
+        {{ staffMember() ? 'Update' : 'Add' }} Staff
       </button>
     </div>
   </form>

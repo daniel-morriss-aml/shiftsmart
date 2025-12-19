@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 
@@ -10,14 +10,14 @@ import { ModalComponent } from '../modal/modal.component';
   styleUrl: './confirmation-modal.component.scss'
 })
 export class ConfirmationModalComponent {
-  @Input() isOpen = false;
-  @Input() title = 'Confirm Action';
-  @Input() message = 'Are you sure you want to proceed?';
-  @Input() confirmText = 'Confirm';
-  @Input() cancelText = 'Cancel';
-  @Input() confirmButtonClass = 'bg-red-600 hover:bg-red-700';
-  @Output() confirm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  isOpen = input(false);
+  title = input('Confirm Action');
+  message = input('Are you sure you want to proceed?');
+  confirmText = input('Confirm');
+  cancelText = input('Cancel');
+  confirmButtonClass = input('bg-red-600 hover:bg-red-700');
+  confirm = output<void>();
+  cancel = output<void>();
 
   onConfirm(): void {
     this.confirm.emit();

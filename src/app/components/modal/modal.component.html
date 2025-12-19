@@ -1,4 +1,4 @@
-@if (isOpen) {
+@if (isOpen()) {
   <div 
     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center"
     (click)="onBackdropClick($event)"
@@ -6,18 +6,18 @@
     <div 
       class="relative bg-white rounded-lg shadow-xl mx-4 w-full"
       [ngClass]="{
-        'max-w-sm': maxWidth === 'sm',
-        'max-w-md': maxWidth === 'md',
-        'max-w-lg': maxWidth === 'lg',
-        'max-w-xl': maxWidth === 'xl',
-        'max-w-2xl': maxWidth === '2xl',
-        'max-w-4xl': maxWidth === '4xl'
+        'max-w-sm': maxWidth() === 'sm',
+        'max-w-md': maxWidth() === 'md',
+        'max-w-lg': maxWidth() === 'lg',
+        'max-w-xl': maxWidth() === 'xl',
+        'max-w-2xl': maxWidth() === '2xl',
+        'max-w-4xl': maxWidth() === '4xl'
       }"
     >
       <!-- Modal Header -->
       <div class="flex items-center justify-between p-5 border-b border-gray-200">
         <h3 class="text-xl font-semibold text-gray-900">
-          {{ title }}
+          {{ title() }}
         </h3>
         <button
           type="button"

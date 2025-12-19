@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { Component, input, output, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal/modal.component';
@@ -18,11 +18,11 @@ interface ShiftSlot {
   templateUrl: './staff-form-modal.component.html',
   styleUrl: './staff-form-modal.component.scss'
 })
-export class StaffFormModalComponent implements OnInit, OnChanges {
-  @Input() isOpen = false;
-  @Input() staffMember: StaffMember | null = null;
-  @Output() save = new EventEmitter<StaffMember>();
-  @Output() cancel = new EventEmitter<void>();
+export class StaffFormModalComponent implements OnInit {
+  isOpen = input(false);
+  staffMember = input<StaffMember | null>(null);
+  save = output<StaffMember>();
+  cancel = output<void>();
 
   // Form fields
   name = '';
@@ -46,12 +46,16 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
     this.initializeShiftSlots();
   }
 
-  ngOnChanges(): void {
-    if (this.staffMember) {
-      this.loadStaffMember(this.staffMember);
-    } else {
-      this.resetForm();
-    }
+  constructor() {
+    // Watch for changes to staffMember input
+    effect(() => {
+      const member = this.staffMember();
+      if (member) {
+        this.loadStaffMember(member);
+      } else {
+        this.resetForm();
+      }
+    });
   }
 
   initializeShiftSlots(): void {
@@ -142,7 +146,7 @@ export class StaffFormModalComponent implements OnInit, OnChanges {
     }
 
     const staff: StaffMember = {
-      id: this.staffMember?.id || this.generateId(),
+      id: this.staffMember()?.id || this.generateId(),
       name: this.name.trim(),
       role: this.role,
       gender: this.gender,
