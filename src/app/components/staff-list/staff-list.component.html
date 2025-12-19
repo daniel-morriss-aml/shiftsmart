@@ -13,6 +13,7 @@
         Load Demo Data
       </button>
       <button 
+        (click)="openAddModal()"
         class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
       >
         + Add Staff
@@ -37,6 +38,7 @@
           Load Demo Data
         </button>
         <button 
+          (click)="openAddModal()"
           class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
         >
           Add Staff Member
@@ -72,7 +74,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          @for (member of staff(); track member.id) {
+          @for (member of sortedStaff(); track member.id) {
             <tr class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
@@ -121,13 +123,14 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button 
+                  (click)="openEditModal(member)"
                   class="text-indigo-600 hover:text-indigo-900 mr-4"
                   title="Edit staff member"
                 >
                   Edit
                 </button>
                 <button 
-                  (click)="deleteStaff(member.id)"
+                  (click)="openDeleteModal(member)"
                   class="text-red-600 hover:text-red-900"
                   title="Delete staff member"
                 >
@@ -159,3 +162,21 @@
     </div>
   }
 </div>
+
+<!-- Modals -->
+<app-staff-form-modal
+  [isOpen]="isFormModalOpen"
+  [staffMember]="selectedStaff"
+  (save)="onSaveStaff($event)"
+  (cancel)="closeFormModal()"
+></app-staff-form-modal>
+
+<app-confirmation-modal
+  [isOpen]="isDeleteModalOpen"
+  [title]="'Delete Staff Member'"
+  [message]="'Are you sure you want to delete ' + (staffToDelete?.name || 'this staff member') + '? This action cannot be undone.'"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (confirm)="onConfirmDelete()"
+  (cancel)="closeDeleteModal()"
+></app-confirmation-modal>

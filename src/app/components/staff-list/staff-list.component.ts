@@ -2,10 +2,12 @@ import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffService } from '../../services/staff.service';
 import { StaffMember, Gender, Role } from '../../models';
+import { StaffFormModalComponent } from '../staff-form-modal/staff-form-modal.component';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-staff-list',
-  imports: [CommonModule],
+  imports: [CommonModule, StaffFormModalComponent, ConfirmationModalComponent],
   standalone: true,
   templateUrl: './staff-list.component.html',
   styleUrl: './staff-list.component.scss'
@@ -17,11 +19,59 @@ export class StaffListComponent {
 
   // Computed signals for UI helpers
   hasStaff = computed(() => this.staff().length > 0);
+  
+  // Sorted staff alphabetically by name
+  sortedStaff = computed(() => {
+    return [...this.staff()].sort((a, b) => a.name.localeCompare(b.name));
+  });
 
-  deleteStaff(id: string): void {
-    if (confirm('Are you sure you want to delete this staff member?')) {
-      this.staffService.deleteStaff(id);
+  // Modal states
+  isFormModalOpen = false;
+  isDeleteModalOpen = false;
+  selectedStaff: StaffMember | null = null;
+  staffToDelete: StaffMember | null = null;
+
+  openAddModal(): void {
+    this.selectedStaff = null;
+    this.isFormModalOpen = true;
+  }
+
+  openEditModal(staff: StaffMember): void {
+    this.selectedStaff = staff;
+    this.isFormModalOpen = true;
+  }
+
+  openDeleteModal(staff: StaffMember): void {
+    this.staffToDelete = staff;
+    this.isDeleteModalOpen = true;
+  }
+
+  closeFormModal(): void {
+    this.isFormModalOpen = false;
+    this.selectedStaff = null;
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.staffToDelete = null;
+  }
+
+  onSaveStaff(staff: StaffMember): void {
+    if (this.selectedStaff) {
+      // Update existing staff
+      this.staffService.updateStaff(staff);
+    } else {
+      // Add new staff
+      this.staffService.addStaff(staff);
     }
+    this.closeFormModal();
+  }
+
+  onConfirmDelete(): void {
+    if (this.staffToDelete) {
+      this.staffService.deleteStaff(this.staffToDelete.id);
+    }
+    this.closeDeleteModal();
   }
 
   // Method to check if staff member has impossible constraints
