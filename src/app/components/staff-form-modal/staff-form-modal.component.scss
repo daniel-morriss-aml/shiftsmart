@@ -1,0 +1,4 @@
+// Staff form modal component styles
+.grid-cols-15 {
+  grid-template-columns: auto repeat(14, minmax(0, 1fr));
+}

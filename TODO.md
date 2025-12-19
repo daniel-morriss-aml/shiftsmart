@@ -52,35 +52,39 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Staff List
 
--   [ ] Create `StaffListComponent`
--   [ ] Display staff table/list (Name, Role, Gender, Shifts per 2 weeks, weekend eligibility)
--   [ ] Add dummy data for testing
--   [ ] Add actions: add, edit, delete
--   [ ] Add indicators for impossible constraints (e.g., 7 shifts but only 3 available slots)
+-   [x] Create `StaffListComponent`
+-   [x] Display staff table/list (Name, Role, Gender, Shifts per 2 weeks, weekend eligibility)
+-   [x] Add dummy data for testing
+-   [x] Add actions: add, edit, delete
+-   [x] Add indicators for impossible constraints (e.g., 7 shifts but only 3 available slots)
+-   [x] Sort staff table alphabetically by name
 
 ### Staff Form
 
--   [ ] Create `StaffFormComponent`
--   [ ] Add form fields: Name, Gender, Role
--   [ ] Add availability options: Can work days? nights? weekends?
--   [ ] Add number of shifts per 2 weeks field
--   [ ] Add validations:
-    -   [ ] Shifts per fortnight > 0
-    -   [ ] At least one shift type/day available
--   [ ] Connect to `StaffService` for CRUD operations
+-   [x] Create `StaffFormModalComponent` (standalone modal component)
+-   [x] Add form fields: Name, Gender, Role
+-   [x] Add availability options: Can work days? nights? weekends?
+-   [x] Add number of shifts per 2 weeks field
+-   [x] Add validations:
+    -   [x] Shifts per fortnight > 0
+    -   [x] At least one shift type/day available
+-   [x] Connect to `StaffService` for CRUD operations
+-   [x] Integrate add/edit functionality with modal
+-   [x] Add delete confirmation modal
 
 ### Staff Availability Grid
 
--   [ ] Create `StaffAvailabilityGridComponent`
--   [ ] Build 7 days × 2 weeks × Day/Night grid UI
--   [ ] Implement Tailwind grid layout
--   [ ] Add quick toggling of availability
--   [ ] Integrate with `StaffFormComponent`
+-   [x] Build 14 days × 2 shifts (Day/Night) grid UI
+-   [x] Implement Tailwind grid layout
+-   [x] Add checkbox for each shift slot (28 total)
+-   [x] Add quick toggling buttons (All Days, All Nights, Weekdays, Weekends)
+-   [x] Highlight weekend shifts
+-   [x] Integrate with `StaffFormModalComponent`
 
 ### Data Persistence
 
--   [ ] Implement localStorage persistence for staff data
--   [ ] Add load/save functionality in `StaffService`
+-   [x] Implement localStorage persistence for staff data
+-   [x] Add load/save functionality in `StaffService`
 
 ---
 
@@ -287,8 +291,8 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ## Current Status
 
-**Active Phase:** Phase 1 – Project Setup & Foundations  
-**Last Updated:** December 18, 2025
+**Active Phase:** Phase 2 – Staff Data Management  
+**Last Updated:** December 19, 2025
 
 ### Completed
 
@@ -296,11 +300,18 @@ A web app that takes staff + shift requirements and automatically generates a fa
 -   Tailwind CSS integrated and configured
 -   ESLint configured with 250-line limit for .ts and .html files
 -   Project structure established
+-   Core models and enums defined
+-   Core services implemented (StaffService, ShiftConfigService, RotaEngineService, RotaStore)
+-   Staff management functionality complete:
+    -   Staff list with sorting
+    -   Add/Edit staff modal with full form
+    -   Delete confirmation modal
+    -   Shift availability grid (14 days × 2 shifts)
+    -   localStorage persistence
 
 ### In Progress
 
--   Core models and enums (not started)
--   Core services (not started)
+-   Shift configuration UI
 
 ### Blockers
 
