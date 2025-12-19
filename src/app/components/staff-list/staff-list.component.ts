@@ -46,6 +46,10 @@ export class StaffListComponent {
     return member.shiftsPerFortnight > maxPossibleSlots;
   }
 
+  getRoleBadgeClass(role: Role): string {
+    return role === Role.Nurse ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800';
+  }
+
   loadDummyData(): void {
     const dummyStaff: StaffMember[] = [
       {
@@ -106,7 +110,7 @@ export class StaffListComponent {
           canWorkNights: false,
           canWorkWeekends: false
         },
-        shiftsPerFortnight: 15  // Impossible constraint: only 10 day shifts available on weekdays
+        shiftsPerFortnight: 15  // Impossible constraint: only 10 day shifts available (weekdays only)
       }
     ];
 
