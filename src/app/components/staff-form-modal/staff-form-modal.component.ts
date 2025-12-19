@@ -2,12 +2,12 @@ import { Component, input, output, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal/modal.component';
-import { StaffMember, Gender, Role } from '../../models';
+import { StaffMember, Gender, Role, ShiftType, ShiftSlotId } from '../../models';
 
 interface ShiftSlot {
   day: number; // 1-14
-  shift: 'Day' | 'Night';
-  id: string;
+  shift: ShiftType;
+  id: ShiftSlotId;
   available: boolean;
 }
 
