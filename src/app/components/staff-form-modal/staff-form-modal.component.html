@@ -1,205 +1,207 @@
-<app-modal 
-  [isOpen]="isOpen()" 
-  [title]="staffMember() ? 'Edit Staff Member' : 'Add Staff Member'" 
-  [maxWidth]="'4xl'"
-  (close)="onCancel()"
+<app-modal
+    [isOpen]="isOpen()"
+    [title]="staffMember() ? 'Edit Staff Member' : 'Add Staff Member'"
+    [maxWidth]="'4xl'"
+    (close)="onCancel()"
 >
-  <form (ngSubmit)="onSave()" class="space-y-6">
-    <!-- Error Message -->
-    @if (errorMessage) {
-      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <span class="block sm:inline">{{ errorMessage }}</span>
-      </div>
-    }
-
-    <!-- Basic Information -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Name -->
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-          Name <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          id="name"
-          [(ngModel)]="name"
-          name="name"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          placeholder="Enter staff name"
-        />
-      </div>
-
-      <!-- Role -->
-      <div>
-        <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
-          Role <span class="text-red-500">*</span>
-        </label>
-        <select
-          id="role"
-          [(ngModel)]="role"
-          name="role"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    <form (ngSubmit)="onSave()" class="space-y-6">
+        <!-- Error Message -->
+        @if (errorMessage) {
+        <div
+            class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+            role="alert"
         >
-          @for (r of roles; track r) {
-            <option [value]="r">{{ r }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Gender -->
-      <div>
-        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">
-          Gender <span class="text-red-500">*</span>
-        </label>
-        <select
-          id="gender"
-          [(ngModel)]="gender"
-          name="gender"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          @for (g of genders; track g) {
-            <option [value]="g">{{ g }}</option>
-          }
-        </select>
-      </div>
-
-      <!-- Shifts per Fortnight -->
-      <div>
-        <label for="shifts" class="block text-sm font-medium text-gray-700 mb-1">
-          Number of Shifts per Fortnight <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          id="shifts"
-          [(ngModel)]="shiftsPerFortnight"
-          name="shifts"
-          required
-          min="1"
-          max="28"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-      </div>
-    </div>
-
-    <!-- Availability Section -->
-    <div class="border-t pt-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-gray-900">Shift Availability</h3>
-        <div class="flex gap-2 text-sm">
-          <button
-            type="button"
-            (click)="toggleAllShifts('Day', true)"
-            class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
-            aria-label="Select all day shifts"
-          >
-            ✓ All Days
-          </button>
-          <button
-            type="button"
-            (click)="toggleAllShifts('Night', true)"
-            class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded hover:bg-indigo-200"
-            aria-label="Select all night shifts"
-          >
-            ✓ All Nights
-          </button>
-          <button
-            type="button"
-            (click)="toggleAllWeekdays(true)"
-            class="px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200"
-            aria-label="Select all weekday shifts"
-          >
-            ✓ Weekdays
-          </button>
-          <button
-            type="button"
-            (click)="toggleAllWeekends(true)"
-            class="px-2 py-1 bg-purple-100 text-purple-800 rounded hover:bg-purple-200"
-            aria-label="Select all weekend shifts"
-          >
-            ✓ Weekends
-          </button>
+            <span class="block sm:inline">{{ errorMessage }}</span>
         </div>
-      </div>
+        }
 
-      <div class="overflow-x-auto">
-        <div class="inline-block min-w-full">
-          <div class="grid grid-cols-15 gap-1 text-xs">
-            <!-- Header row -->
-            <div class="font-semibold text-gray-700 p-2"></div>
-            @for (day of days; track day) {
-              <div 
-                class="font-semibold text-gray-700 p-2 text-center"
-                [ngClass]="{ 'bg-purple-50': isWeekend(day) }"
-              >
-                {{ getDayLabel(day) }}
-              </div>
-            }
+        <!-- Basic Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                    Name <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="name"
+                    [(ngModel)]="name"
+                    name="name"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Enter staff name"
+                />
+            </div>
 
-            <!-- Day shift row -->
-            <div class="font-semibold text-gray-700 p-2 bg-yellow-50">Day</div>
-            @for (day of days; track day) {
-              @for (slot of shiftSlots; track slot.id) {
-                @if (slot.day === day && slot.shift === 'Day') {
-                  <div class="p-1 text-center" [ngClass]="{ 'bg-purple-50': isWeekend(day) }">
-                    <input
-                      type="checkbox"
-                      [id]="slot.id"
-                      [(ngModel)]="slot.available"
-                      [name]="slot.id"
-                      class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                      [attr.aria-label]="getDayLabel(day) + ' Day shift'"
-                    />
-                  </div>
-                }
-              }
-            }
+            <!-- Role -->
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
+                    Role <span class="text-red-500">*</span>
+                </label>
+                <select
+                    id="role"
+                    [(ngModel)]="role"
+                    name="role"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    @for (r of roles; track r) {
+                    <option [value]="r">{{ r }}</option>
+                    }
+                </select>
+            </div>
 
-            <!-- Night shift row -->
-            <div class="font-semibold text-gray-700 p-2 bg-indigo-50">Night</div>
-            @for (day of days; track day) {
-              @for (slot of shiftSlots; track slot.id) {
-                @if (slot.day === day && slot.shift === 'Night') {
-                  <div class="p-1 text-center" [ngClass]="{ 'bg-purple-50': isWeekend(day) }">
-                    <input
-                      type="checkbox"
-                      [id]="slot.id"
-                      [(ngModel)]="slot.available"
-                      [name]="slot.id"
-                      class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                      [attr.aria-label]="getDayLabel(day) + ' Night shift'"
-                    />
-                  </div>
-                }
-              }
-            }
-          </div>
+            <!-- Gender -->
+            <div>
+                <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">
+                    Gender <span class="text-red-500">*</span>
+                </label>
+                <select
+                    id="gender"
+                    [(ngModel)]="gender"
+                    name="gender"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    @for (g of genders; track g) {
+                    <option [value]="g">{{ g }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Shifts per Fortnight -->
+            <div>
+                <label for="shifts" class="block text-sm font-medium text-gray-700 mb-1">
+                    Number of Shifts per Fortnight <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="number"
+                    id="shifts"
+                    [(ngModel)]="shiftsPerFortnight"
+                    name="shifts"
+                    required
+                    min="1"
+                    max="28"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+            </div>
         </div>
-      </div>
 
-      <p class="text-xs text-gray-500 mt-2">
-        <span class="inline-block w-3 h-3 bg-purple-50 border border-gray-300 mr-1"></span>
-        Weekend shifts are highlighted
-      </p>
-    </div>
+        <!-- Availability Section -->
+        <div class="border-t pt-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Shift Availability</h3>
+                <div class="flex gap-2 text-sm">
+                    <button
+                        type="button"
+                        (click)="toggleAllShifts(ShiftType.Day, true)"
+                        class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
+                        aria-label="Select all day shifts"
+                    >
+                        ✓ All Days
+                    </button>
+                    <button
+                        type="button"
+                        (click)="toggleAllShifts(ShiftType.Night, true)"
+                        class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded hover:bg-indigo-200"
+                        aria-label="Select all night shifts"
+                    >
+                        ✓ All Nights
+                    </button>
+                    <button
+                        type="button"
+                        (click)="toggleAllWeekdays(true)"
+                        class="px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200"
+                        aria-label="Select all weekday shifts"
+                    >
+                        ✓ Weekdays
+                    </button>
+                    <button
+                        type="button"
+                        (click)="toggleAllWeekends(true)"
+                        class="px-2 py-1 bg-purple-100 text-purple-800 rounded hover:bg-purple-200"
+                        aria-label="Select all weekend shifts"
+                    >
+                        ✓ Weekends
+                    </button>
+                    @if (hasSelectedShifts()) {
+                    <button
+                        type="button"
+                        (click)="clearAllShifts()"
+                        class="px-2 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200"
+                        aria-label="Clear all shift selections"
+                    >
+                        ✕ Clear
+                    </button>
+                    }
+                </div>
+            </div>
 
-    <!-- Form Actions -->
-    <div class="flex justify-end gap-3 pt-4 border-t">
-      <button
-        type="button"
-        (click)="onCancel()"
-        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-medium"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
-      >
-        {{ staffMember() ? 'Update' : 'Add' }} Staff
-      </button>
-    </div>
-  </form>
+            <div class="overflow-x-auto">
+                <div class="inline-block min-w-full">
+                    <div class="grid grid-cols-15 gap-1 text-xs">
+                        <!-- Header row -->
+                        <div class="font-semibold text-gray-700 p-2"></div>
+                        @for (day of days; track day) {
+                        <div
+                            class="font-semibold text-gray-700 p-2 text-center"
+                            [ngClass]="{ 'bg-purple-50': isWeekend(day) }"
+                        >
+                            {{ getDayLabel(day) }}
+                        </div>
+                        }
+
+                        <!-- Day shift row -->
+                        <div class="font-semibold text-gray-700 p-2 bg-yellow-50">Day</div>
+                        @for (day of days; track day) { @for (slot of shiftSlots; track slot.id) {
+                        @if (slot.day === day && slot.shift === 'Day') {
+                        <div class="p-1 text-center" [ngClass]="{ 'bg-purple-50': isWeekend(day) }">
+                            <input
+                                type="checkbox"
+                                [id]="slot.id"
+                                [(ngModel)]="slot.available"
+                                [name]="slot.id"
+                                class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                [attr.aria-label]="getDayLabel(day) + ' Day shift'"
+                            />
+                        </div>
+                        } } }
+
+                        <!-- Night shift row -->
+                        <div class="font-semibold text-gray-700 p-2 bg-indigo-50">Night</div>
+                        @for (day of days; track day) { @for (slot of shiftSlots; track slot.id) {
+                        @if (slot.day === day && slot.shift === 'Night') {
+                        <div class="p-1 text-center" [ngClass]="{ 'bg-purple-50': isWeekend(day) }">
+                            <input
+                                type="checkbox"
+                                [id]="slot.id"
+                                [(ngModel)]="slot.available"
+                                [name]="slot.id"
+                                class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                [attr.aria-label]="getDayLabel(day) + ' Night shift'"
+                            />
+                        </div>
+                        } } }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-3 pt-4 border-t">
+            <button
+                type="button"
+                (click)="onCancel()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-medium"
+            >
+                Cancel
+            </button>
+            <button
+                type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+            >
+                {{ staffMember() ? 'Update' : 'Add' }} Staff
+            </button>
+        </div>
+    </form>
 </app-modal>
