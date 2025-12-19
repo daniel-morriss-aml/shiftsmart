@@ -42,8 +42,8 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### App Shell & Navigation
 
--   [ ] Create `AppComponent` with top navigation
--   [ ] Add navigation links: "Staff", "Shift Setup", "Generate Rota", "Settings"
+-   [x] Create `AppComponent` with top navigation
+-   [x] Add navigation links: "Staff", "Shift Setup", "Generate Rota", "Settings"
 -   [ ] (Optional) Create `SidebarNavigationComponent` for progress/steps
 
 ---
