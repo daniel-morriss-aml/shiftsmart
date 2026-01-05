@@ -137,11 +137,17 @@ export class StaffService {
         }
 
         const a = availability as Record<string, unknown>;
-        
+
+        const hasValidUnavailableSlots =
+            a['unavailableSlots'] === undefined ||
+            (Array.isArray(a['unavailableSlots']) &&
+                (a['unavailableSlots'] as unknown[]).every((slot) => typeof slot === 'string'));
+
         return (
             typeof a['canWorkDays'] === 'boolean' &&
             typeof a['canWorkNights'] === 'boolean' &&
-            typeof a['canWorkWeekends'] === 'boolean'
+            typeof a['canWorkWeekends'] === 'boolean' &&
+            hasValidUnavailableSlots
         );
     }
 }

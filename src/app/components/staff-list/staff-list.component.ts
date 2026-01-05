@@ -202,6 +202,11 @@ export class StaffListComponent {
             alert(`Failed to import staff list: ${result.error}`);
           }
         };
+        reader.onerror = (e: ProgressEvent<FileReader>) => {
+          const error = (e.target as FileReader | null)?.error;
+          const message = error?.message || 'An error occurred while reading the selected file.';
+          alert(`Failed to read file: ${message}`);
+        };
         reader.readAsText(file);
       }
     };
