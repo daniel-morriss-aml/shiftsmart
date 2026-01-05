@@ -168,4 +168,48 @@ export class StaffListComponent {
     this.staffService.clearAll();
     dummyStaff.forEach(member => this.staffService.addStaff(member));
   }
+
+  exportStaffList(): void {
+    this.staffService.downloadStaffList();
+  }
+
+  importStaffList(): void {
+    // Warn user if there is existing data
+    if (this.hasStaff()) {
+      const confirmed = confirm(
+        'Warning: Importing a staff list will replace all existing staff data. Do you want to continue?'
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.onchange = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const content = e.target?.result as string;
+          const result = this.staffService.importStaffList(content);
+          
+          if (result.success) {
+            alert(`Successfully imported ${result.count} staff member(s)!`);
+          } else {
+            alert(`Failed to import staff list: ${result.error}`);
+          }
+        };
+        reader.onerror = (e: ProgressEvent<FileReader>) => {
+          const error = (e.target as FileReader | null)?.error;
+          const message = error?.message || 'An error occurred while reading the selected file.';
+          alert(`Failed to read file: ${message}`);
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  }
 }
