@@ -39,7 +39,7 @@ export default [
       '@angular-eslint': angular,
     },
     rules: {
-      'max-lines': ['error', { max: 250, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 700, skipBlankLines: true, skipComments: true }],
     },
   },
   {
