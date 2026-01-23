@@ -5,6 +5,7 @@ import { StaffService } from '../../services/staff.service';
 import { ShiftConfigService } from '../../services/shift-config.service';
 import { RotaEngineService } from '../../services/rota-engine.service';
 import { RotaStore } from '../../services/rota-store.service';
+import { ShiftType } from '../../models';
 
 @Component({
   selector: 'app-generate-rota',
@@ -19,6 +20,9 @@ export class GenerateRotaComponent {
   private shiftConfigService = inject(ShiftConfigService);
   private rotaEngineService = inject(RotaEngineService);
   private rotaStore = inject(RotaStore);
+
+  // Expose ShiftType enum to template
+  protected readonly ShiftType = ShiftType;
 
   // Signals
   protected periodStartValue = signal<string>(this.getNextMonday());
@@ -82,7 +86,7 @@ export class GenerateRotaComponent {
     return this.staff().find(s => s.id === staffId)?.name || 'Unknown';
   }
 
-  getAssignmentsForStaffAndDate(staffId: string, date: string): string[] {
+  getAssignmentsForStaffAndDate(staffId: string, date: string): ShiftType[] {
     const currentRota = this.rota();
     if (!currentRota) return [];
     
@@ -133,6 +137,33 @@ export class GenerateRotaComponent {
   regenerateRota(): void {
     this.rotaStore.clearRota();
     this.generateRota();
+  }
+
+  toggleShiftAssignment(staffId: string, date: string, shiftType: ShiftType): void {
+    const currentRota = this.rota();
+    if (!currentRota) return;
+
+    const assignments = [...currentRota.assignments];
+    const existingIndex = assignments.findIndex(
+      a => a.staffId === staffId && a.date === date && a.shiftType === shiftType
+    );
+
+    if (existingIndex >= 0) {
+      // Remove assignment
+      assignments.splice(existingIndex, 1);
+    } else {
+      // Add assignment
+      const shiftSlotId = `${date}-${shiftType}`;
+      assignments.push({
+        shiftSlotId,
+        shiftType,
+        date,
+        staffId,
+      });
+    }
+
+    // Update the store with new assignments
+    this.rotaStore.updateAssignments(assignments);
   }
 
   private getNextMonday(): string {
