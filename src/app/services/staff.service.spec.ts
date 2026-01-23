@@ -43,6 +43,30 @@ describe('StaffService', () => {
       expect(parsed[0].name).toBe('Test User');
     });
 
+    it('should export staff list with unavailableSlots', () => {
+      const testStaff = {
+        id: '1',
+        name: 'Test User',
+        gender: Gender.Male,
+        role: Role.Nurse,
+        availability: {
+          canWorkDays: true,
+          canWorkNights: false,
+          canWorkWeekends: true,
+          unavailableSlots: ['day-1-Day', 'day-2-Night'],
+        },
+        shiftsPerFortnight: 7,
+      };
+
+      service.addStaff(testStaff);
+      const exported = service.exportStaffList();
+      const parsed = JSON.parse(exported);
+
+      expect(Array.isArray(parsed)).toBe(true);
+      expect(parsed.length).toBe(1);
+      expect(parsed[0].availability.unavailableSlots).toEqual(['day-1-Day', 'day-2-Night']);
+    });
+
     it('should export empty array when no staff', () => {
       const exported = service.exportStaffList();
       const parsed = JSON.parse(exported);
@@ -75,6 +99,35 @@ describe('StaffService', () => {
       expect(result.count).toBe(1);
       expect(service.staff().length).toBe(1);
       expect(service.staff()[0].name).toBe('Alice');
+    });
+
+    it('should import staff list with unavailableSlots', () => {
+      const validJson = JSON.stringify([
+        {
+          id: '1',
+          name: 'Alice',
+          gender: 'Female',
+          role: 'Nurse',
+          availability: {
+            canWorkDays: true,
+            canWorkNights: true,
+            canWorkWeekends: true,
+            unavailableSlots: ['day-1-Day', 'day-3-Night'],
+          },
+          shiftsPerFortnight: 7,
+        },
+      ]);
+
+      const result = service.importStaffList(validJson);
+
+      expect(result.success).toBe(true);
+      expect(result.count).toBe(1);
+      expect(service.staff().length).toBe(1);
+      expect(service.staff()[0].name).toBe('Alice');
+      expect(service.staff()[0].availability.unavailableSlots).toEqual([
+        'day-1-Day',
+        'day-3-Night',
+      ]);
     });
 
     it('should reject non-array data', () => {
@@ -123,6 +176,30 @@ describe('StaffService', () => {
           availability: {
             canWorkDays: true,
             // missing canWorkNights and canWorkWeekends
+          },
+          shiftsPerFortnight: 7,
+        },
+      ]);
+
+      const result = service.importStaffList(invalidStaff);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Invalid staff member format');
+      expect(service.staff().length).toBe(0);
+    });
+
+    it('should reject staff members with invalid unavailableSlots type', () => {
+      const invalidStaff = JSON.stringify([
+        {
+          id: '1',
+          name: 'Alice',
+          gender: 'Female',
+          role: 'Nurse',
+          availability: {
+            canWorkDays: true,
+            canWorkNights: true,
+            canWorkWeekends: true,
+            unavailableSlots: 'not-an-array', // should be an array
           },
           shiftsPerFortnight: 7,
         },
