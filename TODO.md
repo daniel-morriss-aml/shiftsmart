@@ -128,31 +128,31 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Rota Generation UI
 
-- [ ] Create `RotaGenerationComponent`
-- [ ] Add period start date selector (defaults to next Monday)
-- [ ] Add "Generate Rota" button
-- [ ] Call `RotaEngineService.generateRota()`
-- [ ] Show errors if staff/requirements are insufficient
-- [ ] Display loading state during generation
+- [x] Create `RotaGenerationComponent`
+- [x] Add period start date selector (defaults to next Monday)
+- [x] Add "Generate Rota" button
+- [x] Call `RotaEngineService.generateRota()`
+- [x] Show errors if staff/requirements are insufficient
+- [x] Display loading state during generation
 
 ### Rota Display
 
-- [ ] Create `RotaGridComponent`
-- [ ] Display 2-week schedule grid
-- [ ] Implement date rows/columns structure
-- [ ] Add Day/Night grouping
-- [ ] Highlight weekends
-- [ ] Highlight nights
+- [x] Create `RotaGridComponent`
+- [x] Display 2-week schedule grid
+- [x] Implement date rows/columns structure
+- [x] Add Day/Night grouping
+- [x] Highlight weekends
+- [x] Highlight nights
 - [ ] Add hover to see shift details
-- [ ] Color-code cells for Days vs Nights
+- [x] Color-code cells for Days vs Nights
 
 ### Staff Summary
 
-- [ ] Create `RotaStaffSummaryComponent`
-- [ ] Display total shifts per staff member
-- [ ] Show Week 1 vs Week 2 breakdown
-- [ ] Show Nights vs Days count
-- [ ] Show weekend count
+- [x] Create `RotaStaffSummaryComponent`
+- [x] Display total shifts per staff member
+- [x] Show Week 1 vs Week 2 breakdown
+- [x] Show Nights vs Days count
+- [x] Show weekend count
 - [ ] Highlight if target `shiftsPerFortnight` is met
 
 ---
@@ -319,7 +319,13 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### In Progress
 
-- Phase 4: Rota generation engine
+- Phase 5: Advanced business rules (weekend grouping, night blocks, etc.)
+
+### Next Steps
+
+- Add editable rota functionality (Phase 6)
+- Implement manual adjustments with drag-and-drop
+- Add export functionality (CSV, print-friendly layout)
 
 ### Blockers
 
