@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     HospitalConfig,
     Rota,
@@ -6,26 +6,16 @@ import {
     ShiftType,
     StaffMember,
     StaffWorkSummary,
-    Role,
 } from '../models';
-
-interface ShiftSlot {
-    date: string;
-    shiftType: ShiftType;
-    isWeekend: boolean;
-    weekNumber: 1 | 2;
-    assignedStaff: string[];
-    minNurses: number;
-    maxNurses: number;
-    minRAs: number;
-    maxRAs: number;
-    maxTotalStaff: number;
-}
+import { RotaValidationService } from './rota-validation.service';
+import { RotaAssignmentHelper, ShiftSlot } from './rota-assignment.helper';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RotaEngineService {
+    private validationService = inject(RotaValidationService);
+
     /**
      * Generates a 2-week rota based on staff, requirements, and rules.
      *
@@ -42,11 +32,19 @@ export class RotaEngineService {
         // Build list of ShiftSlot objects for 14 days × 2 shifts
         const slots = this.buildShiftSlots(startDate, config);
 
-        // Assign staff to shifts
-        const assignments = this.assignStaffToShifts(slots, staff);
+        // Assign staff to shifts with business rules
+        const assignments = this.assignStaffToShifts(slots, staff, startDate);
 
         // Compute StaffWorkSummary
         const staffSummaries = this.computeStaffWorkSummaries(assignments, staff, startDate);
+
+        // Validate the rota against all business rules
+        const validationResult = this.validationService.validateRota(
+            assignments,
+            staffSummaries,
+            staff,
+            periodStart
+        );
 
         return {
             id: this.generateRotaId(),
@@ -54,6 +52,7 @@ export class RotaEngineService {
             periodEnd: endDate.toISOString().split('T')[0],
             assignments,
             staffSummaries,
+            validationResult,
         };
     }
 
@@ -100,68 +99,57 @@ export class RotaEngineService {
         return slots;
     }
 
-    private assignStaffToShifts(slots: ShiftSlot[], staff: StaffMember[]): ShiftAssignment[] {
+    private assignStaffToShifts(slots: ShiftSlot[], staff: StaffMember[], startDate: Date): ShiftAssignment[] {
         const assignments: ShiftAssignment[] = [];
 
-        // Track how many shifts each staff member has been assigned
         const staffAssignmentCount = new Map<string, number>();
-        staff.forEach((s) => staffAssignmentCount.set(s.id, 0));
+        const week1Count = new Map<string, number>();
+        const week2Count = new Map<string, number>();
+        staff.forEach((s) => {
+            staffAssignmentCount.set(s.id, 0);
+            week1Count.set(s.id, 0);
+            week2Count.set(s.id, 0);
+        });
 
-        // Process each slot and try to fill it
-        for (const slot of slots) {
-            // Filter available staff for this slot
-            const availableStaff = staff.filter((s) => this.isStaffAvailable(s, slot));
+        const weekendSlots = slots.filter((s) => s.isWeekend);
+        const weekdaySlots = slots.filter((s) => !s.isWeekend);
+        const nightSlots = slots.filter((s) => s.shiftType === ShiftType.Night);
 
-            // Sort by current assignment count (fewest shifts first for fair distribution)
-            availableStaff.sort(
-                (a, b) => (staffAssignmentCount.get(a.id) || 0) - (staffAssignmentCount.get(b.id) || 0)
+        RotaAssignmentHelper.assignWeekendShifts(
+            weekendSlots,
+            staff,
+            assignments,
+            staffAssignmentCount,
+            week1Count,
+            week2Count,
+            this.isStaffAvailable.bind(this)
+        );
+
+        RotaAssignmentHelper.assignNightBlocks(
+            nightSlots,
+            staff,
+            assignments,
+            staffAssignmentCount,
+            week1Count,
+            week2Count,
+            this.isStaffAvailable.bind(this)
+        );
+
+        const remainingSlots = slots.filter((slot) => {
+            return !RotaAssignmentHelper.isSlotAssigned(slot, assignments);
+        });
+
+        for (const slot of remainingSlots) {
+            RotaAssignmentHelper.assignSlot(
+                slot,
+                staff,
+                assignments,
+                staffAssignmentCount,
+                week1Count,
+                week2Count,
+                true,
+                this.isStaffAvailable.bind(this)
             );
-
-            // Separate nurses and RAs
-            const nurses = availableStaff.filter((s) => s.role === Role.Nurse);
-            const ras = availableStaff.filter((s) => s.role === Role.RA);
-
-            // Assign nurses first (to meet minimum requirement)
-            let nursesAssigned = 0;
-            for (const nurse of nurses) {
-                if (nursesAssigned >= slot.minNurses && nursesAssigned >= slot.maxNurses) break;
-                if (slot.assignedStaff.length >= slot.maxTotalStaff) break;
-
-                const currentCount = staffAssignmentCount.get(nurse.id) || 0;
-                if (currentCount < nurse.shiftsPerFortnight) {
-                    slot.assignedStaff.push(nurse.id);
-                    nursesAssigned++;
-                    staffAssignmentCount.set(nurse.id, currentCount + 1);
-
-                    assignments.push({
-                        shiftSlotId: `${slot.date}-${slot.shiftType}`,
-                        shiftType: slot.shiftType,
-                        date: slot.date,
-                        staffId: nurse.id,
-                    });
-                }
-            }
-
-            // Assign RAs (to meet minimum requirement)
-            let rasAssigned = 0;
-            for (const ra of ras) {
-                if (rasAssigned >= slot.minRAs && rasAssigned >= slot.maxRAs) break;
-                if (slot.assignedStaff.length >= slot.maxTotalStaff) break;
-
-                const currentCount = staffAssignmentCount.get(ra.id) || 0;
-                if (currentCount < ra.shiftsPerFortnight) {
-                    slot.assignedStaff.push(ra.id);
-                    rasAssigned++;
-                    staffAssignmentCount.set(ra.id, currentCount + 1);
-
-                    assignments.push({
-                        shiftSlotId: `${slot.date}-${slot.shiftType}`,
-                        shiftType: slot.shiftType,
-                        date: slot.date,
-                        staffId: ra.id,
-                    });
-                }
-            }
         }
 
         return assignments;

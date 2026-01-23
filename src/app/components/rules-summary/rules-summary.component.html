@@ -1,0 +1,24 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">Active Scheduling Rules</h2>
+  <p class="text-gray-600 mb-6">
+    The rota generation system follows these clinical and operational rules to ensure safe,
+    fair, and compliant scheduling:
+  </p>
+
+  <div class="space-y-4">
+    @for (rule of rules; track rule.name) {
+      <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+        <h3 class="font-semibold text-blue-900 mb-2">{{ rule.name }}</h3>
+        <p class="text-gray-700 text-sm">{{ rule.description }}</p>
+      </div>
+    }
+  </div>
+
+  <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded p-4">
+    <p class="text-sm text-yellow-800">
+      <strong>Note:</strong> Some rules are "soft" constraints (preferred but not mandatory), while
+      others are "hard" constraints (must be satisfied). Violations will be highlighted after
+      generation.
+    </p>
+  </div>
+</div>

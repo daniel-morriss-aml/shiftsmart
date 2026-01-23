@@ -6,10 +6,12 @@ import { ShiftConfigService } from '../../services/shift-config.service';
 import { RotaEngineService } from '../../services/rota-engine.service';
 import { RotaStore } from '../../services/rota-store.service';
 import { ShiftType } from '../../models';
+import { RulesSummaryComponent } from '../rules-summary/rules-summary.component';
+import { RuleValidationPanelComponent } from '../rule-validation-panel/rule-validation-panel.component';
 
 @Component({
   selector: 'app-generate-rota',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RulesSummaryComponent, RuleValidationPanelComponent],
   standalone: true,
   templateUrl: './generate-rota.component.html',
   styleUrl: './generate-rota.component.scss',
