@@ -50,12 +50,59 @@ export class RotaAssignmentHelper {
         }
 
         for (const [, slots] of weekendGroups) {
-            slots.sort((a, b) => {
-                if (a.date !== b.date) return a.date.localeCompare(b.date);
+            const sortSlots = (a: ShiftSlot, b: ShiftSlot): number => {
+                if (a.date !== b.date) {
+                    return a.date.localeCompare(b.date);
+                }
                 return a.shiftType === ShiftType.Day ? -1 : 1;
-            });
+            };
+
+            const saturdaySlots: ShiftSlot[] = [];
+            const sundaySlots: ShiftSlot[] = [];
+            const otherSlots: ShiftSlot[] = [];
 
             for (const slot of slots) {
+                const dayOfWeek = new Date(slot.date).getDay();
+                if (dayOfWeek === 6) {
+                    saturdaySlots.push(slot);
+                } else if (dayOfWeek === 0) {
+                    sundaySlots.push(slot);
+                } else {
+                    otherSlots.push(slot);
+                }
+            }
+
+            saturdaySlots.sort(sortSlots);
+            sundaySlots.sort(sortSlots);
+            otherSlots.sort(sortSlots);
+
+            // First, assign Saturday slots using the original staff ordering.
+            for (const slot of saturdaySlots) {
+                this.assignSlot(slot, staff, assignments, staffCount, week1Count, week2Count, false, isStaffAvailable);
+            }
+
+            // Collect staff who worked on Saturday so we can prioritize them for Sunday.
+            const saturdayStaffIds = new Set<string>();
+            for (const slot of saturdaySlots) {
+                for (const staffId of slot.assignedStaff) {
+                    saturdayStaffIds.add(staffId);
+                }
+            }
+
+            let reorderedStaff = staff;
+            if (saturdayStaffIds.size > 0) {
+                const preferredStaff = staff.filter((member) => saturdayStaffIds.has((member as unknown as { id: string }).id));
+                const remainingStaff = staff.filter((member) => !saturdayStaffIds.has((member as unknown as { id: string }).id));
+                reorderedStaff = [...preferredStaff, ...remainingStaff];
+            }
+
+            // Then, assign Sunday slots, prioritizing staff who worked on Saturday.
+            for (const slot of sundaySlots) {
+                this.assignSlot(slot, reorderedStaff, assignments, staffCount, week1Count, week2Count, false, isStaffAvailable);
+            }
+
+            // Finally, handle any non-Saturday/Sunday slots (if present) with the original ordering.
+            for (const slot of otherSlots) {
                 this.assignSlot(slot, staff, assignments, staffCount, week1Count, week2Count, false, isStaffAvailable);
             }
         }
