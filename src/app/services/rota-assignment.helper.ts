@@ -109,12 +109,96 @@ export class RotaAssignmentHelper {
             });
 
             if (availableForBlock.length > 0) {
-                for (const slot of block) {
-                    this.assignSlot(slot, availableForBlock, assignments, staffCount, week1Count, week2Count, false, isStaffAvailable);
+                let blockAssignedStaff: StaffMember[] | null = null;
+
+                for (let i = 0; i < block.length; i++) {
+                    const slot = block[i];
+
+                    if (i === 0) {
+                        // First slot in the block: assign from all staff available for the whole block.
+                        this.assignSlot(
+                            slot,
+                            availableForBlock,
+                            assignments,
+                            staffCount,
+                            week1Count,
+                            week2Count,
+                            false,
+                            isStaffAvailable
+                        );
+
+                        if (slot.assignedStaff && slot.assignedStaff.length > 0) {
+                            const assignedIds = new Set(slot.assignedStaff);
+                            const matchedStaff = availableForBlock.filter((member) =>
+                                assignedIds.has((member as any).id)
+                            );
+
+                            if (matchedStaff.length > 0) {
+                                blockAssignedStaff = matchedStaff;
+                            }
+                        }
+                    } else {
+                        const candidates = blockAssignedStaff && blockAssignedStaff.length > 0
+                            ? blockAssignedStaff
+                            : availableForBlock;
+
+                        this.assignSlot(
+                            slot,
+                            candidates,
+                            assignments,
+                            staffCount,
+                            week1Count,
+                            week2Count,
+                            false,
+                            isStaffAvailable
+                        );
+                    }
                 }
             } else {
-                for (const slot of block) {
-                    this.assignSlot(slot, staff, assignments, staffCount, week1Count, week2Count, false, isStaffAvailable);
+                let blockAssignedStaff: StaffMember[] | null = null;
+
+                for (let i = 0; i < block.length; i++) {
+                    const slot = block[i];
+
+                    if (i === 0) {
+                        // First slot in the block: assign from the full staff list as a fallback.
+                        this.assignSlot(
+                            slot,
+                            staff,
+                            assignments,
+                            staffCount,
+                            week1Count,
+                            week2Count,
+                            false,
+                            isStaffAvailable
+                        );
+
+                        if (slot.assignedStaff && slot.assignedStaff.length > 0) {
+                            const assignedIds = new Set(slot.assignedStaff);
+                            const matchedStaff = staff.filter((member) =>
+                                assignedIds.has((member as any).id)
+                            );
+
+                            if (matchedStaff.length > 0) {
+                                blockAssignedStaff = matchedStaff;
+                            }
+                        }
+                    } else {
+                        const candidates = blockAssignedStaff && blockAssignedStaff.length > 0
+                            ? blockAssignedStaff
+                            : staff;
+
+                        this.assignSlot(
+                            slot,
+                            candidates,
+                            assignments,
+                            staffCount,
+                            week1Count,
+                            week2Count,
+                            false,
+                            isStaffAvailable
+                        );
+                    }
                 }
             }
         }
@@ -196,16 +280,22 @@ export class RotaAssignmentHelper {
             }
         }
 
-        if (nursesAssigned < slot.maxNurses && rasAssigned < slot.minRAs) {
+        if (rasAssigned < slot.minRAs) {
+            let remainingRAsNeeded = slot.minRAs - rasAssigned;
+
             for (const nurse of nurses) {
-                if (slot.assignedStaff.includes(nurse.id)) continue;
+                if (remainingRAsNeeded <= 0) break;
+                if (nursesAssigned >= slot.maxNurses) break;
                 if (slot.assignedStaff.length >= slot.maxTotalStaff) break;
+                if (slot.assignedStaff.includes(nurse.id)) continue;
 
                 const currentCount = staffCount.get(nurse.id) || 0;
                 if (currentCount < nurse.shiftsPerFortnight) {
                     this.addAssignment(slot, nurse.id, assignments, staffCount, week1Count, week2Count);
                     slot.assignedStaff.push(nurse.id);
                     nursesAssigned++;
+                    rasAssigned++;
+                    remainingRAsNeeded--;
                 }
             }
         }

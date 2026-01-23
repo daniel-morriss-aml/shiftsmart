@@ -112,7 +112,6 @@ export class RotaEngineService {
         });
 
         const weekendSlots = slots.filter((s) => s.isWeekend);
-        const weekdaySlots = slots.filter((s) => !s.isWeekend);
         const nightSlots = slots.filter((s) => s.shiftType === ShiftType.Night);
 
         RotaAssignmentHelper.assignWeekendShifts(

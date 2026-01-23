@@ -211,7 +211,6 @@ export class RotaValidationService {
 
             if (maleRAs.length < 2) {
                 violationCount++;
-                const [date, shiftType] = slotId.split('-').slice(0, -1).join('-') + '-' + slotId.split('-').pop();
                 details.push(`Shift ${slotId} has only ${maleRAs.length} male RA(s), requires 2`);
             }
         }
