@@ -141,7 +141,7 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 ### Angular Best Practices
 
 - Always use standalone components over `NgModules`
-- Do NOT set `standalone: true` inside the `@Component`, `@Directive` and `@Pipe` decorators
+- Do NOT set `standalone: true` inside the `@Component`, `@Directive` and `@Pipe` decorators (Angular 19+ defaults to standalone, so it's unnecessary)
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
