@@ -94,7 +94,7 @@ export class RotaStore {
                 // Day/Night count
                 if (assignment.shiftType === ShiftType.Day) {
                     dayCount++;
-                } else {
+                } else if (assignment.shiftType === ShiftType.Night) {
                     nightCount++;
                 }
             }

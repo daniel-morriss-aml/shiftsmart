@@ -5,6 +5,7 @@ import { StaffService } from '../../services/staff.service';
 import { ShiftConfigService } from '../../services/shift-config.service';
 import { RotaEngineService } from '../../services/rota-engine.service';
 import { RotaStore } from '../../services/rota-store.service';
+import { ShiftType } from '../../models';
 
 @Component({
   selector: 'app-generate-rota',
@@ -19,6 +20,9 @@ export class GenerateRotaComponent {
   private shiftConfigService = inject(ShiftConfigService);
   private rotaEngineService = inject(RotaEngineService);
   private rotaStore = inject(RotaStore);
+
+  // Expose ShiftType enum to template
+  protected readonly ShiftType = ShiftType;
 
   // Signals
   protected periodStartValue = signal<string>(this.getNextMonday());
@@ -82,7 +86,7 @@ export class GenerateRotaComponent {
     return this.staff().find(s => s.id === staffId)?.name || 'Unknown';
   }
 
-  getAssignmentsForStaffAndDate(staffId: string, date: string): string[] {
+  getAssignmentsForStaffAndDate(staffId: string, date: string): ShiftType[] {
     const currentRota = this.rota();
     if (!currentRota) return [];
     
@@ -135,7 +139,7 @@ export class GenerateRotaComponent {
     this.generateRota();
   }
 
-  toggleShiftAssignment(staffId: string, date: string, shiftType: string): void {
+  toggleShiftAssignment(staffId: string, date: string, shiftType: ShiftType): void {
     const currentRota = this.rota();
     if (!currentRota) return;
 
@@ -152,7 +156,7 @@ export class GenerateRotaComponent {
       const shiftSlotId = `${date}-${shiftType}`;
       assignments.push({
         shiftSlotId,
-        shiftType: shiftType as any,
+        shiftType,
         date,
         staffId,
       });

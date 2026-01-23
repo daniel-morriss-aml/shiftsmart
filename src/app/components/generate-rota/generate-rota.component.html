@@ -116,27 +116,28 @@
                             <button
                               (click)="toggleShiftAssignment(member.id, date, shiftType)"
                               class="px-1 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity cursor-pointer"
-                              [class.bg-amber-500]="shiftType === 'Day'"
-                              [class.bg-indigo-600]="shiftType === 'Night'"
+                              [class.bg-amber-500]="shiftType === ShiftType.Day"
+                              [class.bg-indigo-600]="shiftType === ShiftType.Night"
                               title="Click to remove {{ shiftType }} shift">
-                              {{ shiftType === 'Day' ? 'D' : 'N' }}
+                              {{ shiftType === ShiftType.Day ? 'D' : 'N' }}
                             </button>
                           }
                         </div>
                         <!-- Add shift buttons (visible on hover) -->
-                        <div class="absolute inset-0 bg-white bg-opacity-90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 pointer-events-none"
+                        <div class="absolute inset-0 bg-opacity-90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 pointer-events-none"
+                             [class.bg-white]="!isWeekend(date)"
                              [class.bg-blue-50]="isWeekend(date)">
-                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes('Day')) {
+                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes(ShiftType.Day)) {
                             <button
-                              (click)="toggleShiftAssignment(member.id, date, 'Day')"
+                              (click)="toggleShiftAssignment(member.id, date, ShiftType.Day)"
                               class="px-2 py-1 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 transition-colors pointer-events-auto"
                               title="Add Day shift">
                               +D
                             </button>
                           }
-                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes('Night')) {
+                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes(ShiftType.Night)) {
                             <button
-                              (click)="toggleShiftAssignment(member.id, date, 'Night')"
+                              (click)="toggleShiftAssignment(member.id, date, ShiftType.Night)"
                               class="px-2 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors pointer-events-auto"
                               title="Add Night shift">
                               +N
