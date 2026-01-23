@@ -1,0 +1,151 @@
+<app-modal
+  [isOpen]="isOpen()"
+  [title]="'Edit ' + getShiftTypeLabel() + ' Shift Requirements'"
+  [maxWidth]="'lg'"
+  (close)="onCancel()"
+>
+  <form (ngSubmit)="onSave()" class="space-y-6">
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div
+        class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+        role="alert"
+      >
+        <span class="block sm:inline">{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Nurses Section -->
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-gray-900">Nurse Requirements</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Min Nurses -->
+        <div>
+          <label for="minNurses" class="block text-sm font-medium text-gray-700 mb-1">
+            Minimum Nurses <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="minNurses"
+            [(ngModel)]="minNurses"
+            name="minNurses"
+            required
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Max Nurses -->
+        <div>
+          <label for="maxNurses" class="block text-sm font-medium text-gray-700 mb-1">
+            Maximum Nurses <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="maxNurses"
+            [(ngModel)]="maxNurses"
+            name="maxNurses"
+            required
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- RAs Section -->
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-gray-900">RA Requirements</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Min RAs -->
+        <div>
+          <label for="minRAs" class="block text-sm font-medium text-gray-700 mb-1">
+            Minimum RAs <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="minRAs"
+            [(ngModel)]="minRAs"
+            name="minRAs"
+            required
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Max RAs -->
+        <div>
+          <label for="maxRAs" class="block text-sm font-medium text-gray-700 mb-1">
+            Maximum RAs <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="maxRAs"
+            [(ngModel)]="maxRAs"
+            name="maxRAs"
+            required
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Staff Section -->
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-gray-900">Total Staff Limit</h3>
+      <div>
+        <label for="maxTotalStaff" class="block text-sm font-medium text-gray-700 mb-1">
+          Maximum Total Staff <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          id="maxTotalStaff"
+          [(ngModel)]="maxTotalStaff"
+          name="maxTotalStaff"
+          required
+          min="0"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <p class="mt-1 text-sm text-gray-500">
+          Maximum total staff across both roles (must be >= min nurses + min RAs)
+        </p>
+      </div>
+    </div>
+
+    <!-- Summary Info -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div class="flex items-start">
+        <svg class="h-5 w-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" 
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" 
+            clip-rule="evenodd" 
+          />
+        </svg>
+        <div class="ml-3 text-sm text-blue-700">
+          <p><strong>Current Settings:</strong></p>
+          <p>Minimum staff required: {{ minNurses + minRAs }}</p>
+          <p>Maximum possible staff: {{ maxNurses + maxRAs }}</p>
+          <p>Total staff limit: {{ maxTotalStaff }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex justify-end gap-3 pt-4 border-t">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-medium"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+      >
+        Save Requirements
+      </button>
+    </div>
+  </form>
+</app-modal>
