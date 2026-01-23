@@ -117,14 +117,14 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Initial Rota Engine
 
-- [ ] Implement basic `RotaEngineService.generateRota()` v1:
-    - [ ] Build list of ShiftSlot objects for 14 days × 2 shifts
-    - [ ] Tag slots as weekend/weekday
-    - [ ] Simple assignment logic (ignore advanced rules initially)
-    - [ ] Fill shifts to meet min requirements
-    - [ ] Respect staff availability
-    - [ ] Respect role (Nurse/RA)
-    - [ ] Compute `StaffWorkSummary`
+- [x] Implement basic `RotaEngineService.generateRota()` v1:
+    - [x] Build list of ShiftSlot objects for 14 days × 2 shifts
+    - [x] Tag slots as weekend/weekday
+    - [x] Simple assignment logic (ignore advanced rules initially)
+    - [x] Fill shifts to meet min requirements
+    - [x] Respect staff availability
+    - [x] Respect role (Nurse/RA)
+    - [x] Compute `StaffWorkSummary`
 
 ### Rota Generation UI
 
