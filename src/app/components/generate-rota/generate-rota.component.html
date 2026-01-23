@@ -82,7 +82,10 @@
       <!-- Rota Grid -->
       @if (rotaGrid()) {
         <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Rota Grid</h3>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold text-gray-900">Rota Grid</h3>
+            <p class="text-sm text-gray-600 italic">Hover over cells to add shifts, click shifts to remove them</p>
+          </div>
           <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-300">
               <thead>
@@ -106,15 +109,40 @@
                       {{ member.name }}
                     </td>
                     @for (date of rotaGrid()!.dates; track date) {
-                      <td class="px-2 py-2 border border-gray-300 text-center text-xs"
+                      <td class="px-2 py-2 border border-gray-300 text-center text-xs relative group"
                           [class.bg-blue-50]="isWeekend(date)">
-                        @for (shiftType of getAssignmentsForStaffAndDate(member.id, date); track shiftType) {
-                          <div class="mb-1 px-1 py-0.5 rounded text-white text-xs"
-                               [class.bg-amber-500]="shiftType === 'Day'"
-                               [class.bg-indigo-600]="shiftType === 'Night'">
-                            {{ shiftType === 'Day' ? 'D' : 'N' }}
-                          </div>
-                        }
+                        <div class="flex flex-col gap-1 min-h-[40px]">
+                          @for (shiftType of getAssignmentsForStaffAndDate(member.id, date); track shiftType) {
+                            <button
+                              (click)="toggleShiftAssignment(member.id, date, shiftType)"
+                              class="px-1 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity cursor-pointer"
+                              [class.bg-amber-500]="shiftType === 'Day'"
+                              [class.bg-indigo-600]="shiftType === 'Night'"
+                              title="Click to remove {{ shiftType }} shift">
+                              {{ shiftType === 'Day' ? 'D' : 'N' }}
+                            </button>
+                          }
+                        </div>
+                        <!-- Add shift buttons (visible on hover) -->
+                        <div class="absolute inset-0 bg-white bg-opacity-90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 pointer-events-none"
+                             [class.bg-blue-50]="isWeekend(date)">
+                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes('Day')) {
+                            <button
+                              (click)="toggleShiftAssignment(member.id, date, 'Day')"
+                              class="px-2 py-1 bg-amber-500 text-white text-xs rounded hover:bg-amber-600 transition-colors pointer-events-auto"
+                              title="Add Day shift">
+                              +D
+                            </button>
+                          }
+                          @if (!getAssignmentsForStaffAndDate(member.id, date).includes('Night')) {
+                            <button
+                              (click)="toggleShiftAssignment(member.id, date, 'Night')"
+                              class="px-2 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors pointer-events-auto"
+                              title="Add Night shift">
+                              +N
+                            </button>
+                          }
+                        </div>
                       </td>
                     }
                   </tr>

@@ -135,6 +135,33 @@ export class GenerateRotaComponent {
     this.generateRota();
   }
 
+  toggleShiftAssignment(staffId: string, date: string, shiftType: string): void {
+    const currentRota = this.rota();
+    if (!currentRota) return;
+
+    const assignments = [...currentRota.assignments];
+    const existingIndex = assignments.findIndex(
+      a => a.staffId === staffId && a.date === date && a.shiftType === shiftType
+    );
+
+    if (existingIndex >= 0) {
+      // Remove assignment
+      assignments.splice(existingIndex, 1);
+    } else {
+      // Add assignment
+      const shiftSlotId = `${date}-${shiftType}`;
+      assignments.push({
+        shiftSlotId,
+        shiftType: shiftType as any,
+        date,
+        staffId,
+      });
+    }
+
+    // Update the store with new assignments
+    this.rotaStore.updateAssignments(assignments);
+  }
+
   private getNextMonday(): string {
     const today = new Date();
     const dayOfWeek = today.getDay();
