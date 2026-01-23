@@ -21,7 +21,15 @@ export class GenerateRotaComponent {
   private rotaStore = inject(RotaStore);
 
   // Signals
-  protected periodStart = signal<string>(this.getNextMonday());
+  protected periodStartValue = signal<string>(this.getNextMonday());
+
+  get periodStart(): string {
+    return this.periodStartValue();
+  }
+
+  set periodStart(value: string) {
+    this.periodStartValue.set(value);
+  }
 
   // Readonly signals from services
   protected staff = this.staffService.staff;
@@ -111,7 +119,7 @@ export class GenerateRotaComponent {
       const rota = this.rotaEngineService.generateRota(
         this.staff(),
         this.config(),
-        this.periodStart()
+        this.periodStart
       );
       this.rotaStore.setRota(rota);
     } catch (err) {
@@ -130,6 +138,9 @@ export class GenerateRotaComponent {
   private getNextMonday(): string {
     const today = new Date();
     const dayOfWeek = today.getDay();
+    // Calculate days until next Monday (0=Sunday, 1=Monday, etc.)
+    // If today is Sunday (0), next Monday is in 1 day
+    // If today is Monday-Saturday (1-6), next Monday is (8 - dayOfWeek) days away
     const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
     const nextMonday = new Date(today);
     nextMonday.setDate(today.getDate() + daysUntilMonday);
