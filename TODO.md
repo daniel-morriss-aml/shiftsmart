@@ -161,54 +161,54 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Weekend Rule
 
-- [ ] Update `RotaEngineService` for weekend assignment:
-    - [ ] Assign 1 weekend per eligible staff
-    - [ ] Group weekend shifts (same person Sat & Sun)
-    - [ ] Respect "cannot work weekends" flag
-    - [ ] Satisfy min staff requirements
+- [x] Update `RotaEngineService` for weekend assignment:
+    - [x] Assign 1 weekend per eligible staff
+    - [x] Group weekend shifts (same person Sat & Sun)
+    - [x] Respect "cannot work weekends" flag
+    - [x] Satisfy min staff requirements
 
 ### Night Block Rule
 
-- [ ] Update `RotaEngineService` for night block assignment:
-    - [ ] Assign blocks of continuous nights
-    - [ ] Prefer 1 week of nights followed by 1 week of days
-    - [ ] Respect availability (no nights if not allowed)
-    - [ ] Avoid single isolated night shifts
+- [x] Update `RotaEngineService` for night block assignment:
+    - [x] Assign blocks of continuous nights
+    - [x] Prefer 1 week of nights followed by 1 week of days
+    - [x] Respect availability (no nights if not allowed)
+    - [x] Avoid single isolated night shifts
 
 ### Week 1/Week 2 Balance
 
-- [ ] Add balance logic to `RotaEngineService`:
-    - [ ] Score assignments based on Week 1 vs Week 2 distribution
-    - [ ] Keep difference ≤ 1 shift per staff where possible
-    - [ ] Penalize uneven distribution in assignment scoring
+- [x] Add balance logic to `RotaEngineService`:
+    - [x] Score assignments based on Week 1 vs Week 2 distribution
+    - [x] Keep difference ≤ 1 shift per staff where possible
+    - [x] Penalize uneven distribution in assignment scoring
 
 ### Nurse ↔ RA Substitution Rule
 
-- [ ] Implement substitution logic:
-    - [ ] First fill Nurse requirements with Nurses
-    - [ ] Fill RA requirements with RAs
-    - [ ] Allow Nurses to substitute for RAs when short
-    - [ ] Never allow RAs to fill Nurse-required slots
+- [x] Implement substitution logic:
+    - [x] First fill Nurse requirements with Nurses
+    - [x] Fill RA requirements with RAs
+    - [x] Allow Nurses to substitute for RAs when short
+    - [x] Never allow RAs to fill Nurse-required slots
 
 ### Gender Rule (Min 2 Male RAs per Shift)
 
-- [ ] Add post-processing pass for gender rule:
-    - [ ] Check each shift for at least 2 male RAs
-    - [ ] Attempt swaps from other shifts if not satisfied
-    - [ ] Flag violations if impossible to resolve
+- [x] Add post-processing pass for gender rule:
+    - [x] Check each shift for at least 2 male RAs
+    - [x] Attempt swaps from other shifts if not satisfied
+    - [x] Flag violations if impossible to resolve
 
 ### Rule Validation UI
 
-- [ ] Create `RulesS ummaryComponent`
-- [ ] Display active rules in plain language
-- [ ] Add explanations for clinical stakeholders
+- [x] Create `RulesSummaryComponent`
+- [x] Display active rules in plain language
+- [x] Add explanations for clinical stakeholders
 
-- [ ] Create `RuleValidationPanelComponent`
-- [ ] Show ✔ Rule satisfied
-- [ ] Show ⚠ Soft violation (e.g., week balance off by 2)
-- [ ] Show ✖ Hard violation (e.g., < 2 male RAs on shift)
-- [ ] Summarize how many shifts/people impacted
-- [ ] Display panel after rota generation
+- [x] Create `RuleValidationPanelComponent`
+- [x] Show ✔ Rule satisfied
+- [x] Show ⚠ Soft violation (e.g., week balance off by 2)
+- [x] Show ✖ Hard violation (e.g., < 2 male RAs on shift)
+- [x] Summarize how many shifts/people impacted
+- [x] Display panel after rota generation
 
 ---
 
@@ -293,7 +293,7 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ## Current Status
 
-**Active Phase:** Phase 4 – Basic Rota Generation & Grid  
+**Active Phase:** Phase 5 – Add Business Rules & Validation (COMPLETE)  
 **Last Updated:** January 23, 2026
 
 ### Completed
@@ -316,14 +316,27 @@ A web app that takes staff + shift requirements and automatically generates a fa
     - Day and night shift requirements display
     - Edit functionality with validation
     - Reset to defaults functionality
+- Basic rota generation complete:
+    - Rota grid display with interactive cells
+    - Staff work summary table
+    - Manual shift assignment toggle
+- **Phase 5 - Business Rules & Validation complete:**
+    - Weekend grouping rule implemented
+    - Night block assignment implemented
+    - Week 1/Week 2 balance logic added
+    - Nurse ↔ RA substitution implemented
+    - Gender rule validation (Min 2 male RAs)
+    - RulesSummaryComponent created
+    - RuleValidationPanelComponent created
+    - Automatic validation after rota generation
 
 ### In Progress
 
-- Phase 5: Advanced business rules (weekend grouping, night blocks, etc.)
+- None
 
 ### Next Steps
 
-- Add editable rota functionality (Phase 6)
+- Phase 6: UX Polish & Export
 - Implement manual adjustments with drag-and-drop
 - Add export functionality (CSV, print-friendly layout)
 

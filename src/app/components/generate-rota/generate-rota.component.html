@@ -69,6 +69,12 @@
 
   <!-- Rota Display -->
   @if (rota()) {
+    <!-- Rules Summary -->
+    <app-rules-summary></app-rules-summary>
+
+    <!-- Rule Validation Panel -->
+    <app-rule-validation-panel [validationResult]="rota()!.validationResult"></app-rule-validation-panel>
+
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">
         Generated Rota: {{ rota()!.periodStart }} to {{ rota()!.periodEnd }}

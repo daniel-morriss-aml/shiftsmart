@@ -1,5 +1,6 @@
 import { ShiftType } from './enums';
 import { ShiftSlotId } from './staff.model';
+import { RuleValidationResult } from './rule-validation.model';
 
 export interface ShiftAssignment {
     shiftSlotId: ShiftSlotId;
@@ -25,6 +26,7 @@ export interface Rota {
     periodEnd: string; // Sunday of week 2 (ISO date)
     assignments: ShiftAssignment[];
     staffSummaries: StaffWorkSummary[];
+    validationResult?: RuleValidationResult;
 }
 
 export interface RotaRules {
