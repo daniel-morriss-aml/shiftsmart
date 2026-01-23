@@ -18,7 +18,7 @@ export class ShiftFormModalComponent {
   save = output<ShiftRequirement>();
   cancel = output<void>();
 
-  // Form fields
+  // Form fields with reasonable defaults
   minNurses = 2;
   maxNurses = 4;
   minRAs = 2;
@@ -52,6 +52,7 @@ export class ShiftFormModalComponent {
   }
 
   resetForm(): void {
+    // Reset to reasonable defaults (actual defaults come from the loaded requirement)
     this.minNurses = 2;
     this.maxNurses = 4;
     this.minRAs = 2;
@@ -86,8 +87,8 @@ export class ShiftFormModalComponent {
       return;
     }
     if (this.maxTotalStaff < this.maxNurses + this.maxRAs) {
-      this.errorMessage = 'Warning: Maximum total staff is less than max nurses + max RAs. This may cause scheduling issues.';
-      // Allow but warn
+      this.errorMessage = 'Maximum total staff must be >= maximum nurses + maximum RAs';
+      return;
     }
 
     const requirement: ShiftRequirement = {
