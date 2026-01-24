@@ -5,26 +5,43 @@ import { StaffService } from '../../services/staff.service';
 import { ShiftConfigService } from '../../services/shift-config.service';
 import { RotaEngineService } from '../../services/rota-engine.service';
 import { RotaStore } from '../../services/rota-store.service';
-import { ShiftType } from '../../models';
+import { DaySummaryService, DaySummary } from '../../services/day-summary.service';
+import { ShiftType, StaffMember, StaffWorkSummary } from '../../models';
 import { RulesSummaryComponent } from '../rules-summary/rules-summary.component';
 import { RuleValidationPanelComponent } from '../rule-validation-panel/rule-validation-panel.component';
+import { DayDetailModalComponent } from '../day-detail-modal/day-detail-modal.component';
+import { StaffDetailModalComponent } from '../staff-detail-modal/staff-detail-modal.component';
 
 @Component({
   selector: 'app-generate-rota',
-  imports: [CommonModule, FormsModule, RulesSummaryComponent, RuleValidationPanelComponent],
-  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RulesSummaryComponent,
+    RuleValidationPanelComponent,
+    DayDetailModalComponent,
+    StaffDetailModalComponent,
+  ],
   templateUrl: './generate-rota.component.html',
   styleUrl: './generate-rota.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenerateRotaComponent {
   private staffService = inject(StaffService);
   private shiftConfigService = inject(ShiftConfigService);
   private rotaEngineService = inject(RotaEngineService);
   private rotaStore = inject(RotaStore);
+  private daySummaryService = inject(DaySummaryService);
 
   // Expose ShiftType enum to template
   protected readonly ShiftType = ShiftType;
+
+  // Modal state
+  protected isDayModalOpen = signal(false);
+  protected selectedDaySummary = signal<DaySummary | null>(null);
+  protected isStaffModalOpen = signal(false);
+  protected selectedStaffMember = signal<StaffMember | null>(null);
+  protected selectedStaffSummary = signal<StaffWorkSummary | null>(null);
 
   // Signals
   protected periodStartValue = signal<string>(this.getNextMonday());
@@ -80,8 +97,30 @@ export class GenerateRotaComponent {
     return {
       dates,
       staff: this.staff(),
-      assignments: currentRota.assignments
+      assignments: currentRota.assignments,
     };
+  });
+
+  // Precompute critical violations for all dates to avoid redundant calculations
+  protected criticalViolationsByDate = computed(() => {
+    const currentRota = this.rota();
+    if (!currentRota || !currentRota.validationResult) return new Map<string, boolean>();
+
+    const violationsMap = new Map<string, boolean>();
+    const grid = this.rotaGrid();
+    if (!grid) return violationsMap;
+
+    for (const date of grid.dates) {
+      const daySummary = this.daySummaryService.getDaySummary(
+        date,
+        currentRota.assignments,
+        this.staff(),
+        currentRota.validationResult.rules
+      );
+      violationsMap.set(date, daySummary.hasCriticalViolations);
+    }
+
+    return violationsMap;
   });
 
   getStaffName(staffId: string): string {
@@ -166,6 +205,50 @@ export class GenerateRotaComponent {
 
     // Update the store with new assignments
     this.rotaStore.updateAssignments(assignments);
+  }
+
+  hasCriticalViolationsForDay(date: string): boolean {
+    return this.criticalViolationsByDate().get(date) || false;
+  }
+
+  openDayPopup(date: string): void {
+    const currentRota = this.rota();
+    if (!currentRota) return;
+
+    const daySummary = this.daySummaryService.getDaySummary(
+      date,
+      currentRota.assignments,
+      this.staff(),
+      currentRota.validationResult?.rules || []
+    );
+
+    this.selectedDaySummary.set(daySummary);
+    this.isDayModalOpen.set(true);
+  }
+
+  closeDayPopup(): void {
+    this.isDayModalOpen.set(false);
+    this.selectedDaySummary.set(null);
+  }
+
+  openStaffPopup(staffId: string): void {
+    const currentRota = this.rota();
+    if (!currentRota) return;
+
+    const staffMember = this.staff().find((s) => s.id === staffId);
+    const workSummary = currentRota.staffSummaries.find((s) => s.staffId === staffId);
+
+    if (staffMember) {
+      this.selectedStaffMember.set(staffMember);
+      this.selectedStaffSummary.set(workSummary || null);
+      this.isStaffModalOpen.set(true);
+    }
+  }
+
+  closeStaffPopup(): void {
+    this.isStaffModalOpen.set(false);
+    this.selectedStaffMember.set(null);
+    this.selectedStaffSummary.set(null);
   }
 
   private getNextMonday(): string {

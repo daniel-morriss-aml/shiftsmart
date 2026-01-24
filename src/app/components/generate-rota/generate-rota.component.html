@@ -69,6 +69,20 @@
 
   <!-- Rota Display -->
   @if (rota()) {
+    <!-- Modals -->
+    <app-day-detail-modal
+      [isOpen]="isDayModalOpen()"
+      [daySummary]="selectedDaySummary()"
+      (close)="closeDayPopup()"
+    ></app-day-detail-modal>
+
+    <app-staff-detail-modal
+      [isOpen]="isStaffModalOpen()"
+      [staffMember]="selectedStaffMember()"
+      [workSummary]="selectedStaffSummary()"
+      (close)="closeStaffPopup()"
+    ></app-staff-detail-modal>
+
     <!-- Rules Summary -->
     <app-rules-summary></app-rules-summary>
 
@@ -94,14 +108,28 @@
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-300">
-              <thead>
+              <thead class="sticky top-0 z-10">
                 <tr class="bg-gray-100">
-                  <th class="px-4 py-2 border border-gray-300 text-left text-sm font-semibold text-gray-900 sticky left-0 bg-gray-100">
+                  <th class="px-4 py-2 border border-gray-300 text-left text-sm font-semibold text-gray-900 sticky left-0 bg-gray-100 z-20">
                     Staff
                   </th>
                   @for (date of rotaGrid()!.dates; track date) {
-                    <th class="px-2 py-2 border border-gray-300 text-center text-xs font-medium text-gray-700 min-w-[80px]"
-                        [class.bg-blue-50]="isWeekend(date)">
+                    <th class="px-2 py-2 border border-gray-300 text-center text-xs font-medium text-gray-700 min-w-[80px] cursor-pointer hover:bg-gray-200 transition-colors relative"
+                        [class.bg-blue-50]="isWeekend(date)"
+                        [class.hover:bg-blue-100]="isWeekend(date)"
+                        tabindex="0"
+                        (click)="openDayPopup(date)"
+                        (keydown.enter)="openDayPopup(date)"
+                        (keydown.space)="openDayPopup(date); $event.preventDefault()">
+                      @if (hasCriticalViolationsForDay(date)) {
+                        <div class="absolute top-1 right-1 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center" 
+                             title="Critical violations"
+                             aria-label="Critical violations on this day">
+                          <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      }
                       <div>{{ getDayOfWeek(date) }}</div>
                       <div class="text-xs text-gray-500">{{ formatDate(date) }}</div>
                     </th>
@@ -111,7 +139,11 @@
               <tbody>
                 @for (member of rotaGrid()!.staff; track member.id) {
                   <tr>
-                    <td class="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-900 sticky left-0 bg-white">
+                    <td class="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-900 sticky left-0 bg-white z-10 cursor-pointer hover:bg-gray-100 transition-colors"
+                        tabindex="0"
+                        (click)="openStaffPopup(member.id)"
+                        (keydown.enter)="openStaffPopup(member.id)"
+                        (keydown.space)="openStaffPopup(member.id); $event.preventDefault()">
                       {{ member.name }}
                     </td>
                     @for (date of rotaGrid()!.dates; track date) {
