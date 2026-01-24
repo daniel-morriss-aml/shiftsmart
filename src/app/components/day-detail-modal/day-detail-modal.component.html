@@ -1,4 +1,4 @@
-<app-modal [isOpen]="isOpen()" [title]="getDayOfWeek(daySummary()?.date || '') + ' - ' + formatDate(daySummary()?.date || '')" [maxWidth]="'2xl'" (close)="onClose()">
+<app-modal [isOpen]="isOpen()" [title]="getModalTitle()" [maxWidth]="'2xl'" (close)="onClose()">
   @if (daySummary()) {
     <div class="space-y-6">
       <!-- Day Shift Summary -->
@@ -61,7 +61,7 @@
           <h4 class="text-lg font-semibold text-gray-900 mb-3">Rule Validations</h4>
           <div class="space-y-3">
             @for (validation of daySummary()!.validations; track validation.ruleId) {
-              <div class="border rounded p-3" [ngClass]="getSeverityClass(validation.severity)">
+              <div class="border rounded p-3" [class]="getSeverityClass(validation.severity)">
                 <div class="flex items-center justify-between mb-2">
                   <h5 class="font-semibold">{{ validation.ruleName }}</h5>
                   <span class="text-xs font-medium px-2 py-1 rounded">

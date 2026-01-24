@@ -72,9 +72,9 @@
 
           <!-- Balance indicator -->
           @if (workSummary()!.week1Assigned !== workSummary()!.week2Assigned) {
-            <div class="mt-3 text-sm" [class.text-yellow-700]="Math.abs(workSummary()!.week1Assigned - workSummary()!.week2Assigned) > 1" [class.text-green-700]="Math.abs(workSummary()!.week1Assigned - workSummary()!.week2Assigned) <= 1">
-              @if (Math.abs(workSummary()!.week1Assigned - workSummary()!.week2Assigned) > 1) {
-                <span>⚠ Weeks are unbalanced (difference: {{ Math.abs(workSummary()!.week1Assigned - workSummary()!.week2Assigned) }})</span>
+            <div class="mt-3 text-sm" [class.text-yellow-700]="weekDifference() > 1" [class.text-green-700]="weekDifference() <= 1">
+              @if (weekDifference() > 1) {
+                <span>⚠ Weeks are unbalanced (difference: {{ weekDifference() }})</span>
               } @else {
                 <span>✓ Weeks are well balanced</span>
               }

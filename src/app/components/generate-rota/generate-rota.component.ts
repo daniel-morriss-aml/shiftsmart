@@ -22,7 +22,6 @@ import { StaffDetailModalComponent } from '../staff-detail-modal/staff-detail-mo
     DayDetailModalComponent,
     StaffDetailModalComponent,
   ],
-  standalone: true,
   templateUrl: './generate-rota.component.html',
   styleUrl: './generate-rota.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,8 +97,30 @@ export class GenerateRotaComponent {
     return {
       dates,
       staff: this.staff(),
-      assignments: currentRota.assignments
+      assignments: currentRota.assignments,
     };
+  });
+
+  // Precompute critical violations for all dates to avoid redundant calculations
+  protected criticalViolationsByDate = computed(() => {
+    const currentRota = this.rota();
+    if (!currentRota || !currentRota.validationResult) return new Map<string, boolean>();
+
+    const violationsMap = new Map<string, boolean>();
+    const grid = this.rotaGrid();
+    if (!grid) return violationsMap;
+
+    for (const date of grid.dates) {
+      const daySummary = this.daySummaryService.getDaySummary(
+        date,
+        currentRota.assignments,
+        this.staff(),
+        currentRota.validationResult.rules
+      );
+      violationsMap.set(date, daySummary.hasCriticalViolations);
+    }
+
+    return violationsMap;
   });
 
   getStaffName(staffId: string): string {
@@ -187,17 +208,7 @@ export class GenerateRotaComponent {
   }
 
   hasCriticalViolationsForDay(date: string): boolean {
-    const currentRota = this.rota();
-    if (!currentRota || !currentRota.validationResult) return false;
-
-    const daySummary = this.daySummaryService.getDaySummary(
-      date,
-      currentRota.assignments,
-      this.staff(),
-      currentRota.validationResult.rules
-    );
-
-    return daySummary.hasCriticalViolations;
+    return this.criticalViolationsByDate().get(date) || false;
   }
 
   openDayPopup(date: string): void {

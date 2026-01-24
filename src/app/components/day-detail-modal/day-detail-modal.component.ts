@@ -22,6 +22,14 @@ export class DayDetailModalComponent {
     this.close.emit();
   }
 
+  getModalTitle(): string {
+    const summary = this.daySummary();
+    if (!summary || !summary.date) {
+      return 'Day Details';
+    }
+    return `${this.getDayOfWeek(summary.date)} - ${this.formatDate(summary.date)}`;
+  }
+
   getDayOfWeek(date: string): string {
     const d = new Date(date);
     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][

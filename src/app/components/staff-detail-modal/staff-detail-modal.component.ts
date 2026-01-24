@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import { StaffMember, StaffWorkSummary } from '../../models';
@@ -16,7 +16,11 @@ export class StaffDetailModalComponent {
   workSummary = input<StaffWorkSummary | null>(null);
   close = output<void>();
 
-  protected readonly Math = Math;
+  protected readonly weekDifference = computed(() => {
+    const summary = this.workSummary();
+    if (!summary) return 0;
+    return Math.abs(summary.week1Assigned - summary.week2Assigned);
+  });
 
   onClose(): void {
     this.close.emit();

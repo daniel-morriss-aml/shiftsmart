@@ -105,11 +105,16 @@ export class DaySummaryService {
     const dayValidations: RuleValidation[] = [];
 
     for (const validation of validations) {
-      // Filter validation details that mention this date
-      const relevantDetails = validation.details.filter((detail) => detail.includes(date));
+      // Filter validation details that mention this date using exact word boundary matching
+      const relevantDetails = validation.details.filter((detail) => {
+        // Use word boundary regex to match the exact date format
+        const datePattern = new RegExp(`\\b${date}\\b`);
+        return datePattern.test(detail);
+      });
 
       if (relevantDetails.length > 0) {
         // Create a filtered copy of the validation with only relevant details
+        // Note: violationCount represents day-specific violations, not total violations across the rota
         dayValidations.push({
           ...validation,
           details: relevantDetails,
