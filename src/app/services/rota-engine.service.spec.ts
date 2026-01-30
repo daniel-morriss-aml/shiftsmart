@@ -344,6 +344,26 @@ describe('RotaEngineService', () => {
             if (maleRA1Summary && maleRA2Summary) {
                 expect(maleRA1Summary.totalAssigned).toBeGreaterThan(0);
                 expect(maleRA2Summary.totalAssigned).toBeGreaterThan(0);
+                
+                // Verify they're being utilized efficiently (should be working most of their available shifts)
+                // With the prioritization, male RAs should hit their shiftsPerFortnight limit
+                expect(maleRA1Summary.totalAssigned).toBeGreaterThanOrEqual(6);
+                expect(maleRA2Summary.totalAssigned).toBeGreaterThanOrEqual(6);
+            }
+            
+            // Check the validation result - we expect violations because we don't have enough male RAs
+            // But with prioritization, violations should be minimized
+            expect(rota.validationResult).toBeTruthy();
+            const genderRule = rota.validationResult?.rules.find((r) => r.ruleId === 'gender-requirement');
+            expect(genderRule).toBeTruthy();
+            
+            // We can't eliminate all violations with only 2 male RAs, but we should minimize them
+            // Total of 28 shifts, only 14 male RA assignments possible (2 RAs × 7 shifts each)
+            // So we expect violations, but male RAs should be maximally utilized
+            if (genderRule) {
+                // With efficient prioritization, the male RAs should be working at capacity
+                // Verify that the total male RA assignments equals their combined shifts per fortnight
+                expect(maleRAAssignments.length).toBe(14); // 7 + 7
             }
         });
     });
