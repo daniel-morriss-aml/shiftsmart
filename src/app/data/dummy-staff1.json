@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "name": "Alice Johnson",
+    "gender": "Female",
+    "role": "Nurse",
+    "availability": {
+      "canWorkDays": true,
+      "canWorkNights": true,
+      "canWorkWeekends": true
+    },
+    "shiftsPerFortnight": 7
+  },
+  {
+    "id": "2",
+    "name": "Bob Smith",
+    "gender": "Male",
+    "role": "RA",
+    "availability": {
+      "canWorkDays": true,
+      "canWorkNights": false,
+      "canWorkWeekends": true
+    },
+    "shiftsPerFortnight": 5
+  },
+  {
+    "id": "3",
+    "name": "Carol Martinez",
+    "gender": "Female",
+    "role": "Nurse",
+    "availability": {
+      "canWorkDays": false,
+      "canWorkNights": true,
+      "canWorkWeekends": false
+    },
+    "shiftsPerFortnight": 6
+  },
+  {
+    "id": "4",
+    "name": "David Lee",
+    "gender": "Male",
+    "role": "RA",
+    "availability": {
+      "canWorkDays": true,
+      "canWorkNights": true,
+      "canWorkWeekends": true
+    },
+    "shiftsPerFortnight": 8
+  },
+  {
+    "id": "5",
+    "name": "Emma Wilson",
+    "gender": "Other",
+    "role": "Nurse",
+    "availability": {
+      "canWorkDays": true,
+      "canWorkNights": false,
+      "canWorkWeekends": false
+    },
+    "shiftsPerFortnight": 15
+  }
+]

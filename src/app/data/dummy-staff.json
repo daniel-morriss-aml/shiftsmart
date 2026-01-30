@@ -1,0 +1,496 @@
+[
+    {
+        "id": "staff-1769201257713-pplmzls33",
+        "name": "Nurse A",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295343-rkf0fn7uv",
+        "name": "Nurse B",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257714-abc1234de",
+        "name": "Nurse C",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295344-def5678fg",
+        "name": "Nurse D",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257715-ghi9012jk",
+        "name": "Nurse E",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295345-lmn3456op",
+        "name": "Nurse F",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257716-qrs7890tu",
+        "name": "Nurse G",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295346-vwx1234yz",
+        "name": "Nurse H",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257717-abc5678de",
+        "name": "Nurse I",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295347-fgh9012ij",
+        "name": "Nurse J",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257718-klm3456no",
+        "name": "Nurse K",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295348-pqr7890st",
+        "name": "Nurse L",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257719-uvw1234xy",
+        "name": "Nurse M",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295349-zab5678cd",
+        "name": "Nurse N",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201257720-efg9012hi",
+        "name": "Nurse O",
+        "role": "Nurse",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201295350-jkl3456mn",
+        "name": "Nurse P",
+        "role": "Nurse",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421247-68ck0e1t7",
+        "name": "RA A",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436654-5ff2ersne",
+        "name": "RA B",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421248-opq7890rs",
+        "name": "RA C",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436655-tuv1234wx",
+        "name": "RA D",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421249-yza5678bc",
+        "name": "RA E",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436656-def9012gh",
+        "name": "RA F",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421250-ijk3456lm",
+        "name": "RA G",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436657-nop7890qr",
+        "name": "RA H",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421251-stu1234vw",
+        "name": "RA I",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436658-xyz5678ab",
+        "name": "RA J",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421252-cde9012fg",
+        "name": "RA K",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436659-hij3456kl",
+        "name": "RA L",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421253-mno7890pq",
+        "name": "RA M",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436660-rst1234uv",
+        "name": "RA N",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421254-wxy5678za",
+        "name": "RA O",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436661-bcd9012ef",
+        "name": "RA P",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421255-ghi3456jk",
+        "name": "RA Q",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436662-lmn7890op",
+        "name": "RA R",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421256-qrs1234tu",
+        "name": "RA S",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436663-vwx5678yz",
+        "name": "RA T",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201421257-abc9012de",
+        "name": "RA U",
+        "role": "RA",
+        "gender": "Male",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    },
+    {
+        "id": "staff-1769201436664-fgh3456ij",
+        "name": "RA V",
+        "role": "RA",
+        "gender": "Female",
+        "shiftsPerFortnight": 7,
+        "availability": {
+            "canWorkDays": true,
+            "canWorkNights": true,
+            "canWorkWeekends": true,
+            "unavailableSlots": []
+        }
+    }
+]
