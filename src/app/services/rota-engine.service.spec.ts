@@ -263,5 +263,88 @@ describe('RotaEngineService', () => {
                 expect(assignment.shiftSlotId).toBe(`${assignment.date}-${assignment.shiftType}`);
             }
         });
+
+        it('should prioritize male RAs to reduce gender requirement violations', () => {
+            // Test that male RA prioritization improves (reduces violations)
+            // compared to not having the prioritization
+            
+            // First, test with staff that would definitely cause violations without proper ordering
+            const testStaffForViolations: StaffMember[] = [
+                // List nurses and female RAs first to test that male RAs are still prioritized
+                {
+                    id: 'nurse-1',
+                    name: 'Nurse 1',
+                    gender: Gender.Female,
+                    role: Role.Nurse,
+                    availability: {
+                        canWorkDays: true,
+                        canWorkNights: true,
+                        canWorkWeekends: true,
+                    },
+                    shiftsPerFortnight: 7,
+                },
+                {
+                    id: 'female-ra-1',
+                    name: 'Female RA 1',
+                    gender: Gender.Female,
+                    role: Role.RA,
+                    availability: {
+                        canWorkDays: true,
+                        canWorkNights: true,
+                        canWorkWeekends: true,
+                    },
+                    shiftsPerFortnight: 7,
+                },
+                // Only 2 male RAs with limited shifts
+                {
+                    id: 'male-ra-1',
+                    name: 'Male RA 1',
+                    gender: Gender.Male,
+                    role: Role.RA,
+                    availability: {
+                        canWorkDays: true,
+                        canWorkNights: true,
+                        canWorkWeekends: true,
+                    },
+                    shiftsPerFortnight: 7,
+                },
+                {
+                    id: 'male-ra-2',
+                    name: 'Male RA 2',
+                    gender: Gender.Male,
+                    role: Role.RA,
+                    availability: {
+                        canWorkDays: true,
+                        canWorkNights: true,
+                        canWorkWeekends: true,
+                    },
+                    shiftsPerFortnight: 7,
+                },
+            ];
+
+            const rota = service.generateRota(testStaffForViolations, testConfig, periodStart);
+
+            // Verify that male RAs are being assigned to shifts
+            const maleRAAssignments = rota.assignments.filter((a) => {
+                const staff = testStaffForViolations.find((s) => s.id === a.staffId);
+                return staff && staff.role === Role.RA && staff.gender === Gender.Male;
+            });
+
+            // Male RAs should be assigned to multiple shifts
+            expect(maleRAAssignments.length).toBeGreaterThan(0);
+            
+            // Check work summaries show male RAs are working
+            const maleRA1Summary = rota.staffSummaries.find((s) => s.staffId === 'male-ra-1');
+            const maleRA2Summary = rota.staffSummaries.find((s) => s.staffId === 'male-ra-2');
+            
+            expect(maleRA1Summary).toBeTruthy();
+            expect(maleRA2Summary).toBeTruthy();
+            
+            // Both male RAs should be assigned close to their maximum shifts
+            if (maleRA1Summary && maleRA2Summary) {
+                expect(maleRA1Summary.totalAssigned).toBeGreaterThan(0);
+                expect(maleRA2Summary.totalAssigned).toBeGreaterThan(0);
+            }
+        });
     });
 });

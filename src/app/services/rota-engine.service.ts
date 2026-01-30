@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import {
+    Gender,
     HospitalConfig,
+    Role,
     Rota,
     ShiftAssignment,
     ShiftType,
@@ -102,10 +104,13 @@ export class RotaEngineService {
     private assignStaffToShifts(slots: ShiftSlot[], staff: StaffMember[], startDate: Date): ShiftAssignment[] {
         const assignments: ShiftAssignment[] = [];
 
+        // Sort staff to prioritize male RAs first to satisfy gender requirements
+        const sortedStaff = this.sortStaffByGenderPriority(staff);
+
         const staffAssignmentCount = new Map<string, number>();
         const week1Count = new Map<string, number>();
         const week2Count = new Map<string, number>();
-        staff.forEach((s) => {
+        sortedStaff.forEach((s) => {
             staffAssignmentCount.set(s.id, 0);
             week1Count.set(s.id, 0);
             week2Count.set(s.id, 0);
@@ -116,7 +121,7 @@ export class RotaEngineService {
 
         RotaAssignmentHelper.assignWeekendShifts(
             weekendSlots,
-            staff,
+            sortedStaff,
             assignments,
             staffAssignmentCount,
             week1Count,
@@ -126,7 +131,7 @@ export class RotaEngineService {
 
         RotaAssignmentHelper.assignNightBlocks(
             nightSlots,
-            staff,
+            sortedStaff,
             assignments,
             staffAssignmentCount,
             week1Count,
@@ -141,7 +146,7 @@ export class RotaEngineService {
         for (const slot of remainingSlots) {
             RotaAssignmentHelper.assignSlot(
                 slot,
-                staff,
+                sortedStaff,
                 assignments,
                 staffAssignmentCount,
                 week1Count,
@@ -236,5 +241,35 @@ export class RotaEngineService {
 
     private generateRotaId(): string {
         return `rota-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    }
+
+    /**
+     * Sorts staff to prioritize male RAs first, ensuring they are assigned to shifts
+     * before other staff members to satisfy the "2 male RAs per shift" requirement.
+     * 
+     * Priority order:
+     * 1. Male RAs
+     * 2. Other RAs (Female, Other gender)
+     * 3. Nurses
+     */
+    private sortStaffByGenderPriority(staff: StaffMember[]): StaffMember[] {
+        return [...staff].sort((a, b) => {
+            // Male RAs get highest priority
+            const aIsMaleRA = a.role === Role.RA && a.gender === Gender.Male;
+            const bIsMaleRA = b.role === Role.RA && b.gender === Gender.Male;
+            
+            if (aIsMaleRA && !bIsMaleRA) return -1;
+            if (!aIsMaleRA && bIsMaleRA) return 1;
+            
+            // Other RAs get second priority
+            const aIsOtherRA = a.role === Role.RA && !aIsMaleRA;
+            const bIsOtherRA = b.role === Role.RA && !bIsMaleRA;
+            
+            if (aIsOtherRA && !bIsOtherRA) return -1;
+            if (!aIsOtherRA && bIsOtherRA) return 1;
+            
+            // Nurses come last, maintain original order
+            return 0;
+        });
     }
 }
