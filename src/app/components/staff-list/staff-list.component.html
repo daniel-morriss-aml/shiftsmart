@@ -1,203 +1,222 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="page-header flex-col items-start lg:flex-row">
-    <div>
-      <p class="section-subtitle">People and coverage</p>
-      <h1 class="section-title">Staff Management</h1>
-    </div>
-    <div class="flex flex-wrap gap-3">
-      <button
-        (click)="loadDummyData()"
-        class="btn btn-secondary"
-      >
-        Load Demo Data
-      </button>
-      <button
-        (click)="importStaffList()"
-        class="btn btn-success"
-        title="Import staff list from JSON file"
-      >
-        Import Staff
-      </button>
-      <button
-        (click)="exportStaffList()"
-        [disabled]="!hasStaff()"
-        class="btn btn-secondary"
-        title="Export staff list as JSON file"
-      >
-        Export Staff
-      </button>
-      <button
-        (click)="openAddModal()"
-        class="btn btn-accent"
-      >
-        + Add Staff
-      </button>
-    </div>
-  </div>
-
-  <!-- Empty State -->
-  @if (!hasStaff()) {
-    <div class="panel p-12 text-center">
-      <svg class="mx-auto h-12 w-12 text-slate-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-      <h3 class="text-lg font-semibold text-slate-900 mb-2">No staff members yet</h3>
-      <p class="text-slate-600 mb-6">Get started by adding your first staff member, loading demo data, or importing an existing list.</p>
-      <div class="flex flex-wrap gap-3 justify-center">
-        <button
-          (click)="loadDummyData()"
-          class="btn btn-secondary"
-        >
-          Load Demo Data
-        </button>
-        <button
-          (click)="importStaffList()"
-          class="btn btn-success"
-        >
-          Import Staff List
-        </button>
-        <button
-          (click)="openAddModal()"
-          class="btn btn-accent"
-        >
-          Add Staff Member
-        </button>
-      </div>
-    </div>
-  }
-
-  <!-- Staff Table -->
-  @if (hasStaff()) {
-    <div class="panel overflow-hidden p-0">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-slate-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Name
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Role
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Gender
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Shifts / Fortnight
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Availability
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-slate-200">
-            @for (member of sortedStaff(); track member.id) {
-              <tr class="transition-colors hover:bg-slate-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center gap-2">
-                    <div class="text-sm font-semibold text-slate-900">{{ member.name }}</div>
-                    @if (hasImpossibleConstraints(member)) {
-                      <span
-                        class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-medium text-red-700"
-                        title="Impossible constraint: shifts required exceeds available slots"
-                      >
-                        ⚠ Constraint Issue
-                      </span>
-                    }
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
-                    [ngClass]="getRoleBadgeClass(member.role)"
-                  >
-                    {{ member.role }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-700">
-                  {{ member.gender }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">
-                  {{ member.shiftsPerFortnight }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex flex-wrap gap-1.5">
-                    @if (member.availability.canWorkDays) {
-                      <span class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-                        Days
-                      </span>
-                    }
-                    @if (member.availability.canWorkNights) {
-                      <span class="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-semibold text-indigo-700">
-                        Nights
-                      </span>
-                    }
-                    @if (member.availability.canWorkWeekends) {
-                      <span class="inline-flex items-center rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">
-                        Weekends
-                      </span>
-                    }
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div class="flex items-center gap-3">
-                    <button
-                      (click)="openEditModal(member)"
-                      class="text-sky-700 hover:text-sky-900"
-                      title="Edit staff member"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      (click)="openDeleteModal(member)"
-                      class="text-red-600 hover:text-red-800"
-                      title="Delete staff member"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-4">
-      <div class="flex items-start gap-3">
-        <svg class="mt-0.5 h-5 w-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"
-          />
-        </svg>
+    <div class="page-header flex-col items-start lg:flex-row">
         <div>
-          <h3 class="text-sm font-semibold text-sky-800">Staff Summary</h3>
-          <p class="mt-1 text-sm text-sky-700">Total Staff: {{ staff().length }}</p>
+            <p class="section-subtitle">People and coverage</p>
+            <h1 class="section-title">Staff Management</h1>
         </div>
-      </div>
+        <div class="flex flex-wrap gap-3">
+            <button (click)="loadDummyData()" class="btn btn-secondary">Load Demo Data</button>
+            <button
+                (click)="importStaffList()"
+                class="btn btn-success"
+                title="Import staff list from JSON file"
+            >
+                Import Staff
+            </button>
+            <button
+                (click)="exportStaffList()"
+                [disabled]="!hasStaff()"
+                class="btn btn-secondary"
+                title="Export staff list as JSON file"
+            >
+                Export Staff
+            </button>
+            <button (click)="openAddModal()" class="btn btn-accent">+ Add Staff</button>
+        </div>
     </div>
-  }
+
+    <!-- Empty State -->
+    @if (!hasStaff()) {
+        <div class="panel p-12 text-center">
+            <svg
+                class="mx-auto h-12 w-12 text-slate-400 mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+            </svg>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">No staff members yet</h3>
+            <p class="text-slate-600 mb-6">
+                Get started by adding your first staff member, loading demo data, or importing an
+                existing list.
+            </p>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button (click)="loadDummyData()" class="btn btn-secondary">Load Demo Data</button>
+                <button (click)="importStaffList()" class="btn btn-success">
+                    Import Staff List
+                </button>
+                <button (click)="openAddModal()" class="btn btn-accent">Add Staff Member</button>
+            </div>
+        </div>
+    }
+
+    <!-- Staff Table -->
+    @if (hasStaff()) {
+        <div class="panel overflow-hidden p-0">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Name
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Role
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Gender
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Shifts / Fortnight
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Availability
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+                            >
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        @for (member of sortedStaff(); track member.id) {
+                            <tr class="transition-colors hover:bg-slate-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center gap-2">
+                                        <div class="text-sm font-semibold text-slate-900">
+                                            {{ member.name }}
+                                        </div>
+                                        @if (hasImpossibleConstraints(member)) {
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-medium text-red-700"
+                                                title="Impossible constraint: shifts required exceeds available slots"
+                                            >
+                                                ⚠ Constraint Issue
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
+                                        [ngClass]="getRoleBadgeClass(member.role)"
+                                    >
+                                        {{ member.role }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-700"
+                                >
+                                    {{ member.gender }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700"
+                                >
+                                    {{ member.shiftsPerFortnight }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-wrap gap-1.5">
+                                        @if (member.availability.canWorkDays) {
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800"
+                                            >
+                                                Days
+                                            </span>
+                                        }
+                                        @if (member.availability.canWorkNights) {
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-semibold text-indigo-700"
+                                            >
+                                                Nights
+                                            </span>
+                                        }
+                                        @if (member.availability.canWorkWeekends) {
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700"
+                                            >
+                                                Weekends
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex items-center gap-3">
+                                        <button
+                                            (click)="openEditModal(member)"
+                                            class="btn btn-ghost btn-sm"
+                                            title="Edit staff member"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            (click)="openDeleteModal(member)"
+                                            class="btn btn-danger btn-sm"
+                                            title="Delete staff member"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-4">
+            <div class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+                <div>
+                    <h3 class="text-sm font-semibold text-sky-800">Staff Summary</h3>
+                    <p class="mt-1 text-sm text-sky-700">Total Staff: {{ staff().length }}</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 <!-- Modals -->
 <app-staff-form-modal
-  [isOpen]="isFormModalOpen"
-  [staffMember]="selectedStaff"
-  (save)="onSaveStaff($event)"
-  (cancel)="closeFormModal()"
+    [isOpen]="isFormModalOpen"
+    [staffMember]="selectedStaff"
+    (save)="onSaveStaff($event)"
+    (cancel)="closeFormModal()"
 ></app-staff-form-modal>
 
 <app-confirmation-modal
-  [isOpen]="isDeleteModalOpen"
-  [title]="'Delete Staff Member'"
-  [message]="'Are you sure you want to delete ' + (staffToDelete?.name || 'this staff member') + '? This action cannot be undone.'"
-  [confirmText]="'Delete'"
-  [cancelText]="'Cancel'"
-  (confirm)="onConfirmDelete()"
-  (cancel)="closeDeleteModal()"
+    [isOpen]="isDeleteModalOpen"
+    [title]="'Delete Staff Member'"
+    [message]="
+        'Are you sure you want to delete ' +
+        (staffToDelete?.name || 'this staff member') +
+        '? This action cannot be undone.'
+    "
+    [confirmText]="'Delete'"
+    [cancelText]="'Cancel'"
+    (confirm)="onConfirmDelete()"
+    (cancel)="closeDeleteModal()"
 ></app-confirmation-modal>

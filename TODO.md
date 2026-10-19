@@ -11,7 +11,6 @@ A web app that takes staff + shift requirements and automatically generates a fa
 ### Project Configuration
 
 - [x] Create Angular 21 project (standalone components)
-- [x] Create Angular 21 project (standalone components)
 - [x] Configure routing and basic layout
 - [x] Integrate Tailwind CSS
 - [x] Configure tailwind.config.js
@@ -222,6 +221,7 @@ A web app that takes staff + shift requirements and automatically generates a fa
     - [x] Professional header/navigation treatment
     - [x] Consistent rounded card surfaces and spacing
     - [x] Accessible focus states and button polish
+    - [x] Reworked shared button system across the app (primary, secondary, ghost, danger actions)
     - [x] Color-coded tags for Days/Nights
     - [x] Role badges for Nurse/RA
     - [x] Gender indicator style support via clear staff metadata styling
