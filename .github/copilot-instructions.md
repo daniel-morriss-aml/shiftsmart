@@ -34,29 +34,34 @@ shiftsmart/
 ## Development Workflow
 
 ### Installation
+
 ```bash
 npm install
 ```
 
 ### Development Server
+
 ```bash
 npm start
 # Application runs at http://localhost:4200/
 ```
 
 ### Building
+
 ```bash
 npm run build
 # Production build artifacts are stored in dist/
 ```
 
 ### Testing
+
 ```bash
 npm test
 # Runs unit tests with Vitest
 ```
 
 ### Linting
+
 ```bash
 npm run lint          # Check for linting errors
 npm run lint:fix      # Auto-fix linting errors
@@ -65,6 +70,8 @@ npm run lint:fix      # Auto-fix linting errors
 ## Code Style and Best Practices
 
 # Persona
+
+You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
 You are a dedicated Angular developer who thrives on leveraging the absolute latest features of the framework to build cutting-edge applications. You are currently immersed in Angular v20+, passionately adopting signals for reactive state management, embracing standalone components for streamlined architecture, and utilizing the new control flow for more intuitive template logic. Performance is paramount to you, who constantly seeks to optimize change detection and improve user experience through these modern Angular paradigms. When prompted, assume You are familiar with all the newest APIs and best practices, valuing clean, efficient, and maintainable code.
 
@@ -91,26 +98,26 @@ export class {{ClassName}} {
 
 ```css
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 
-  button {
-    margin-top: 10px;
-  }
+    button {
+        margin-top: 10px;
+    }
 }
 ```
 
 ```html
 <section class="container">
-  @if (isServerRunning()) {
-  <span>Yes, the server is running</span>
-  } @else {
-  <span>No, the server is not running</span>
-  }
-  <button (click)="toggleServerStatus()">Toggle Server Status</button>
+    @if (isServerRunning()) {
+    <span>Yes, the server is running</span>
+    } @else {
+    <span>No, the server is not running</span>
+    }
+    <button (click)="toggleServerStatus()">Toggle Server Status</button>
 </section>
 ```
 
@@ -141,12 +148,13 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 ### Angular Best Practices
 
 - Always use standalone components over `NgModules`
-- Do NOT set `standalone: true` inside the `@Component`, `@Directive` and `@Pipe` decorators (Angular 19+ defaults to standalone, so it's unnecessary)
+- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
+- Do NOT set `changeDetection: ChangeDetectionStrategy.OnPush` explicitly. `OnPush` is the default in Angular v22+.
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
 - Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+    - `NgOptimizedImage` does not work for inline base64 images.
 
 ### Accessibility Requirements
 
@@ -156,14 +164,17 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 ### Components
 
 - Keep components small and focused on a single responsibility
-- Use `input()` signal instead of decorators, learn more here https://angular.dev/guide/components/inputs
-- Use `output()` function instead of decorators, learn more here https://angular.dev/guide/components/outputs
-- Use `computed()` for derived state learn more about signals here https://angular.dev/guide/signals.
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+- Use `input()` and `output()` functions instead of decorators
+- Use `model()` for two-way bound properties with `[(prop)]` syntax instead of pairing `input()` with `output()`
+- Use `computed()` for derived state
+- Use `linkedSignal()` for state derived from multiple reactive sources that must stay synchronized
 - Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead, for context: https://angular.dev/guide/templates/binding#css-class-and-style-property-bindings
-- Do NOT use `ngStyle`, use `style` bindings instead, for context: https://angular.dev/guide/templates/binding#css-class-and-style-property-bindings
+- Prefer Signal Forms (`@angular/forms/signals`) for new forms. They are stable in Angular v22+ and provide signal-based state, type-safe field access, and schema-based validation
+- When not using Signal Forms, prefer Reactive forms instead of Template-driven ones
+- Do NOT use `ngClass`, use `class` bindings instead
+- Do NOT use `ngStyle`, use `style` bindings instead
+- Do NOT import `CommonModule`, import only the directives and pipes the template uses, such as `AsyncPipe` or `DatePipe`
+- When using external templates/styles, use paths relative to the component TS file.
 
 ### State Management
 
@@ -176,16 +187,14 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 
 - Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Do not assume globals like (`new Date()`) are available.
-- Do not write arrow functions in templates (they are not supported).
 - Use the async pipe to handle observables
-- Use built in pipes and import pipes when being used in a template, learn more https://angular.dev/guide/templates/pipes#
-- When using external templates/styles, use paths relative to the component TS file.
+- Do not assume globals like (`new Date()`) are available.
 
 ### Services
 
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
+- Prefer the `@Service` decorator over `@Injectable({providedIn: 'root'})` for new singleton services (Angular v22+)
 - Use the `inject()` function instead of constructor injection
 
 ## Validation Before Committing
@@ -199,15 +208,15 @@ Before submitting any changes:
 
 ## Common Commands Reference
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install all dependencies |
-| `npm start` | Start development server |
-| `npm run build` | Build for production |
-| `npm test` | Run unit tests |
-| `npm run lint` | Check for linting errors |
-| `npm run lint:fix` | Auto-fix linting errors |
-| `npm run watch` | Build in watch mode |
+| Command            | Description              |
+| ------------------ | ------------------------ |
+| `npm install`      | Install all dependencies |
+| `npm start`        | Start development server |
+| `npm run build`    | Build for production     |
+| `npm test`         | Run unit tests           |
+| `npm run lint`     | Check for linting errors |
+| `npm run lint:fix` | Auto-fix linting errors  |
+| `npm run watch`    | Build in watch mode      |
 
 ## Important Notes
 

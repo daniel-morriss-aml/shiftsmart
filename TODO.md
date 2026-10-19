@@ -134,6 +134,7 @@ A web app that takes staff + shift requirements and automatically generates a fa
 - [x] Call `RotaEngineService.generateRota()`
 - [x] Show errors if staff/requirements are insufficient
 - [x] Display loading state during generation
+- [ ] Rework the rota generation engine from a clean slate; the current heuristic approach is brittle and should be left alone for now until a proper rewrite is planned
 
 ### Rota Display
 
@@ -216,14 +217,15 @@ A web app that takes staff + shift requirements and automatically generates a fa
 
 ### Styling & Theme
 
-- [ ] Improve Tailwind styling:
-    - [ ] Clean typography
-    - [ ] Consistent card designs
-    - [ ] Professional buttons and form controls
-    - [ ] Color-coded tags for Days/Nights
-    - [ ] Role badges for Nurse/RA
-    - [ ] Gender indicators
-    - [ ] Responsive design for mobile/tablet
+- [x] Improve app shell styling and theme polish:
+    - [x] Clean typography and global page styling
+    - [x] Professional header/navigation treatment
+    - [x] Consistent rounded card surfaces and spacing
+    - [x] Accessible focus states and button polish
+    - [x] Color-coded tags for Days/Nights
+    - [x] Role badges for Nurse/RA
+    - [x] Gender indicator style support via clear staff metadata styling
+    - [x] Responsive design for mobile/tablet refinements across main management screens
 
 ### Manual Adjustments
 
