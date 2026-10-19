@@ -55,6 +55,57 @@
         </div>
       </div>
 
+      <!-- Manual Adjustments -->
+      <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
+        <h4 class="text-lg font-semibold text-slate-900 mb-4">Manual Adjustments</h4>
+
+        @for (shiftType of [ShiftType.Day, ShiftType.Night]; track shiftType) {
+          <div class="mb-5 last:mb-0">
+            <div class="mb-2 flex items-center justify-between">
+              <h5 class="text-sm font-semibold uppercase tracking-wide text-slate-700">
+                {{ shiftType === ShiftType.Day ? 'Day Shift' : 'Night Shift' }}
+              </h5>
+              <span class="text-xs font-medium text-slate-500">
+                {{ getAssignedStaffForShift(shiftType).length }} assigned
+              </span>
+            </div>
+
+            <div class="mb-3 flex flex-wrap gap-2">
+              @for (member of getAssignedStaffForShift(shiftType); track member.id) {
+                <button
+                  type="button"
+                  class="btn btn-ghost btn-sm"
+                  (click)="toggleStaffForShift(member.id, shiftType)"
+                >
+                  {{ member.name }} ×
+                </button>
+              }
+              @empty {
+                <span class="text-sm text-slate-500">No assigned staff</span>
+              }
+            </div>
+
+            <div class="border-t border-slate-200 pt-3">
+              <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Add staff</p>
+              <div class="flex flex-wrap gap-2">
+                @for (member of getUnassignedStaffForShift(shiftType); track member.id) {
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    (click)="toggleStaffForShift(member.id, shiftType)"
+                  >
+                    {{ member.name }}
+                  </button>
+                }
+                @empty {
+                  <span class="text-sm text-slate-500">All staff are assigned</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
       <!-- Rule Validations -->
       @if (daySummary()!.validations.length > 0) {
         <div class="border border-gray-200 rounded-lg p-4">

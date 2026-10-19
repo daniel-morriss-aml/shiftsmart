@@ -78,6 +78,7 @@
       [isOpen]="isDayModalOpen()"
       [daySummary]="selectedDaySummary()"
       (close)="closeDayPopup()"
+      (dayUpdated)="refreshSelectedDaySummary()"
     ></app-day-detail-modal>
 
     <app-staff-detail-modal

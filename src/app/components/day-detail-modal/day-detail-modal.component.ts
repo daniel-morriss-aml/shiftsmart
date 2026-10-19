@@ -1,8 +1,10 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import { DaySummary } from '../../services/day-summary.service';
-import { RuleViolationSeverity } from '../../models';
+import { RuleViolationSeverity, ShiftType, StaffMember } from '../../models';
+import { RotaStore } from '../../services/rota-store.service';
+import { StaffService } from '../../services/staff.service';
 
 @Component({
   selector: 'app-day-detail-modal',
@@ -12,14 +14,107 @@ import { RuleViolationSeverity } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayDetailModalComponent {
+  private readonly rotaStore = inject(RotaStore);
+  private readonly staffService = inject(StaffService);
+
   isOpen = input(false);
   daySummary = input<DaySummary | null>(null);
   close = output<void>();
+  dayUpdated = output<void>();
 
   protected readonly RuleViolationSeverity = RuleViolationSeverity;
+  protected readonly ShiftType = ShiftType;
+
+  protected readonly staff = this.staffService.staff;
+  protected readonly rota = this.rotaStore.rota;
+
+  protected readonly assignedByShift = computed(() => {
+    const summary = this.daySummary();
+    const rota = this.rota();
+
+    if (!summary || !rota) {
+      return new Map<ShiftType, string[]>();
+    }
+
+    const map = new Map<ShiftType, string[]>();
+    for (const shiftType of [ShiftType.Day, ShiftType.Night]) {
+      const assignedStaffIds = rota.assignments
+        .filter((assignment) => assignment.date === summary.date && assignment.shiftType === shiftType)
+        .map((assignment) => assignment.staffId);
+
+      map.set(shiftType, assignedStaffIds);
+    }
+
+    return map;
+  });
 
   onClose(): void {
     this.close.emit();
+  }
+
+  toggleStaffForShift(staffId: string, shiftType: ShiftType): void {
+    const summary = this.daySummary();
+    const rota = this.rota();
+
+    if (!summary || !rota) {
+      return;
+    }
+
+    const assignments = [...rota.assignments];
+    const existingIndex = assignments.findIndex(
+      (assignment) =>
+        assignment.date === summary.date &&
+        assignment.shiftType === shiftType &&
+        assignment.staffId === staffId
+    );
+
+    if (existingIndex >= 0) {
+      assignments.splice(existingIndex, 1);
+    } else {
+      assignments.push({
+        shiftSlotId: `${summary.date}-${shiftType}-${staffId}`,
+        date: summary.date,
+        shiftType,
+        staffId,
+      });
+    }
+
+    this.rotaStore.updateAssignments(assignments);
+    this.dayUpdated.emit();
+  }
+
+  getAssignedStaffForShift(shiftType: ShiftType): StaffMember[] {
+    const summary = this.daySummary();
+    const rota = this.rota();
+
+    if (!summary || !rota) {
+      return [];
+    }
+
+    const assignedIds = new Set(
+      rota.assignments
+        .filter((assignment) => assignment.date === summary.date && assignment.shiftType === shiftType)
+        .map((assignment) => assignment.staffId)
+    );
+
+    return this.staff().filter((member) => assignedIds.has(member.id));
+  }
+
+  getUnassignedStaffForShift(shiftType: ShiftType): StaffMember[] {
+    const summary = this.daySummary();
+    const rota = this.rota();
+
+    if (!summary || !rota) {
+      return [];
+    }
+
+    const assignedIds = new Set(
+      rota.assignments
+        .filter((assignment) => assignment.date === summary.date && assignment.shiftType === shiftType)
+        .map((assignment) => assignment.staffId)
+    );
+
+    return this.staff().filter((member) => !assignedIds.has(member.id));
   }
 
   getModalTitle(): string {

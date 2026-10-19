@@ -226,6 +226,27 @@ export class GenerateRotaComponent {
     this.isDayModalOpen.set(true);
   }
 
+  refreshSelectedDaySummary(): void {
+    const date = this.selectedDaySummary()?.date;
+    if (!date) {
+      return;
+    }
+
+    const currentRota = this.rota();
+    if (!currentRota) {
+      return;
+    }
+
+    const nextSummary = this.daySummaryService.getDaySummary(
+      date,
+      currentRota.assignments,
+      this.staff(),
+      currentRota.validationResult?.rules || []
+    );
+
+    this.selectedDaySummary.set(nextSummary);
+  }
+
   closeDayPopup(): void {
     this.isDayModalOpen.set(false);
     this.selectedDaySummary.set(null);
